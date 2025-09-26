@@ -3,6 +3,7 @@
 
 import { LandingHeader } from "@/components/organisms/LandingHeader";
 import { LandingHero } from "@/components/organisms/LandingHero";
+import { FeaturesSection } from "@/components/organisms/FeaturesSection";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,18 +21,17 @@ const LandingPage = () => {
 
   // ローディング中
   if (isLoading) {
-    return (
-      <div className="min-h-screen">
-        {/* 固定ヘッダー */}
-        <LandingHeader />
+  return (
+    <div className="min-h-screen">
+      {/* 固定ヘッダー */}
+      <LandingHeader />
 
-        {/* Heroセクション */}
-        <LandingHero />
-        {/* ダミーコンテンツ */}
-        <main className="container mx-auto px-6 py-20 space-y-20">
-          <section id="features" className="h-[80vh] flex items-center justify-center bg-gray-100">
-            <h2 className="text-3xl font-semibold">製品紹介セクション</h2>
-          </section>
+      {/* Heroセクション */}
+      <LandingHero />
+
+      {/* ダミーコンテンツ */}
+      <main className="container mx-auto px-6 py-20 space-y-20">
+        <FeaturesSection />
 
           <section id="options" className="h-[80vh] flex items-center justify-center bg-gray-100">
             <h2 className="text-3xl font-semibold">Option 制セクション</h2>
