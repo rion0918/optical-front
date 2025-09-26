@@ -2,6 +2,7 @@
 
 
 import { LandingHeader } from "@/components/organisms/LandingHeader";
+import { LandingHero } from "@/components/organisms/LandingHero";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
@@ -24,12 +25,10 @@ const LandingPage = () => {
         {/* 固定ヘッダー */}
         <LandingHeader />
 
+        {/* Heroセクション */}
+        <LandingHero />
         {/* ダミーコンテンツ */}
         <main className="container mx-auto px-6 py-20 space-y-20">
-          <section id="hero" className="h-[80vh] flex items-center justify-center bg-gray-50">
-            <h1 className="text-5xl font-bold">Hero セクション</h1>
-          </section>
-
           <section id="features" className="h-[80vh] flex items-center justify-center bg-gray-100">
             <h2 className="text-3xl font-semibold">製品紹介セクション</h2>
           </section>
