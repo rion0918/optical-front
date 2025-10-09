@@ -1,13 +1,9 @@
 "use client";
 
-/**
- * ランディングページ
- */
 
-import Link from "next/link";
+import { LandingHeader } from "@/components/organisms/LandingHeader";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 
 const LandingPage = () => {
@@ -24,35 +20,28 @@ const LandingPage = () => {
   // ローディング中
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600">読み込み中...</p>
-        </div>
-      </div>
-    );
-  }
+      <div className="min-h-screen">
+        {/* 固定ヘッダー */}
+        <LandingHeader />
 
-  // 未認証の場合のみランディングページを表示
-  if (!user) {
-    return (
-      <div className="text-center space-y-8">
-        {/* CTA ボタン */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-          <Link href="/auth/signup" className="w-full sm:w-auto">
-            <Button size="lg" className="w-full sm:w-auto px-8 py-6 text-lg">
-              無料で始める
-            </Button>
-          </Link>
-          <Link href="/auth/login" className="w-full sm:w-auto">
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full sm:w-auto px-8 py-6 text-lg"
-            >
-              ログイン
-            </Button>
-          </Link>
-        </div>
+        {/* ダミーコンテンツ */}
+        <main className="container mx-auto px-6 py-20 space-y-20">
+          <section id="hero" className="h-[80vh] flex items-center justify-center bg-gray-50">
+            <h1 className="text-5xl font-bold">Hero セクション</h1>
+          </section>
+
+          <section id="features" className="h-[80vh] flex items-center justify-center bg-gray-100">
+            <h2 className="text-3xl font-semibold">製品紹介セクション</h2>
+          </section>
+
+          <section id="options" className="h-[80vh] flex items-center justify-center bg-gray-100">
+            <h2 className="text-3xl font-semibold">Option 制セクション</h2>
+          </section>
+
+          <section id="pricing" className="h-[80vh] flex items-center justify-center bg-gray-50">
+            <h2 className="text-3xl font-semibold">料金プランセクション</h2>
+          </section>
+        </main>
       </div>
     );
   }
