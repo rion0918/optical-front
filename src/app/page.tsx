@@ -197,7 +197,7 @@ export default function Home() {
           console.log("[navigate] 単体スケジュール作成画面へ遷移");
         }}
       />
-      
+
       {/* メールアドレス変更確認モーダル */}
       <ConfirmModal
         isOpen={isConfirmOpen}
