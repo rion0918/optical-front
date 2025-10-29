@@ -6,6 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/atoms/DropdownMenu";
 import { ScrollArea } from "@/components/atoms/ScrollArea";
@@ -91,31 +92,33 @@ export function MultiSelectDropdown({
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent sideOffset={4} className="p-0">
-        <ScrollArea
-          className="w-full"
-          style={
-            scrollAreaMaxHeight
-              ? { maxHeight: `${scrollAreaMaxHeight}px` }
-              : undefined
-          }
-        >
-          <div className="py-1">
-            {normalized.map((option) => (
-              <DropdownMenuCheckboxItem
-                key={option.value}
-                checked={value.includes(option.value)}
-                onCheckedChange={(checked) =>
-                  handleTempChange(option.value, checked)
-                }
-                onSelect={(e) => e.preventDefault()} // チェック後に閉じないように
-              >
-                {option.label}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </div>
-        </ScrollArea>
-      </DropdownMenuContent>
+      <DropdownMenuPortal>
+        <DropdownMenuContent sideOffset={4} className="p-0">
+          <ScrollArea
+            className="w-full"
+            style={
+              scrollAreaMaxHeight
+                ? { maxHeight: `${scrollAreaMaxHeight}px` }
+                : undefined
+            }
+          >
+            <div className="py-1">
+              {normalized.map((option) => (
+                <DropdownMenuCheckboxItem
+                  key={option.value}
+                  checked={value.includes(option.value)}
+                  onCheckedChange={(checked) =>
+                    handleTempChange(option.value, checked)
+                  }
+                  onSelect={(e) => e.preventDefault()} // チェック後に閉じないように
+                >
+                  {option.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </div>
+          </ScrollArea>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
     </DropdownMenu>
   );
 }
