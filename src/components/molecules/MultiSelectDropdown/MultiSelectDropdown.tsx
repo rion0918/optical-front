@@ -93,7 +93,7 @@ export function MultiSelectDropdown({
       </DropdownMenuTrigger>
 
       <DropdownMenuPortal>
-        <DropdownMenuContent sideOffset={4} className="p-0 z-[9999]">
+        <DropdownMenuContent sideOffset={4} className="p-0">
           <ScrollArea
             className="w-full"
             style={
