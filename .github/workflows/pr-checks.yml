@@ -97,7 +97,13 @@ jobs:
         with:
           version: latest
 
-      - name: Setup Node.js
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js with pnpm cache
         uses: actions/setup-node@v4
         with:
           node-version: 20
