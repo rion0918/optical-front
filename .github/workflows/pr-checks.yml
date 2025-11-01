@@ -97,13 +97,7 @@ jobs:
         with:
           version: latest
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Setup Node.js with pnpm cache
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -111,6 +105,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Verify Storybook installation
+        run: pnpm list @storybook/react || true
 
       - name: Build Storybook
         run: pnpm run build-storybook
