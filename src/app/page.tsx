@@ -81,7 +81,7 @@ export default function Home() {
       title: "今日の予定",
       dateLabel: dateLabel || "取得中...",
     }),
-    [dateLabel],
+    [dateLabel]
   );
 
   const handleViewDateChange = (next: Date) => {
@@ -271,7 +271,7 @@ function BoardArea({
         year: "numeric",
         month: "long",
       }).format(viewDate),
-    [viewDate],
+    [viewDate]
   );
 
   const handleShiftMonth = (delta: number) => {
@@ -297,7 +297,7 @@ function BoardArea({
     <Card
       className={cn(
         "flex min-h-0 flex-1 flex-col gap-2 border border-primary/30 bg-slate-800/90 p-3",
-        className,
+        className
       )}
     >
       <CalendarBoardHeader

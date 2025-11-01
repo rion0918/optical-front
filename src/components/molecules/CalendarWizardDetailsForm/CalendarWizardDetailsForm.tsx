@@ -112,7 +112,7 @@ export function CalendarWizardDetailsForm({
                     "h-9 w-9 rounded-full border-2 transition",
                     isActive
                       ? "border-primary shadow focus-visible:ring-2 focus-visible:ring-offset-2"
-                      : "border-transparent hover:-translate-y-0.5",
+                      : "border-transparent hover:-translate-y-0.5"
                   )}
                   style={{ backgroundColor: option }}
                   aria-label={`色 ${option}`}
@@ -145,7 +145,7 @@ export function CalendarWizardDetailsForm({
               <div
                 className={cn(
                   "relative flex min-h-[220px] w-full overflow-hidden rounded-xl border-2 border-dashed border-muted-foreground/30 bg-muted/20 text-center transition hover:border-primary/70 hover:bg-primary/5",
-                  imagePreviewUrl ? "border-primary/60 bg-background" : "",
+                  imagePreviewUrl ? "border-primary/60 bg-background" : ""
                 )}
               >
                 <button
@@ -155,7 +155,7 @@ export function CalendarWizardDetailsForm({
                   onDrop={handleDrop}
                   className={cn(
                     "group relative flex h-full w-full cursor-pointer flex-col items-center justify-center gap-3 p-6 text-center outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                    imagePreviewUrl ? "p-0" : "",
+                    imagePreviewUrl ? "p-0" : ""
                   )}
                   aria-labelledby="calendar-image-label"
                   aria-describedby="calendar-image-hint"
@@ -243,7 +243,7 @@ export function CalendarWizardDetailsForm({
                 calendar={previewCalendar}
                 className={cn(
                   "pointer-events-none select-none opacity-95",
-                  imagePreviewUrl ? "" : "opacity-80",
+                  imagePreviewUrl ? "" : "opacity-80"
                 )}
               />
             </div>
