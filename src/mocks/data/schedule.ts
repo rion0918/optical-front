@@ -4,74 +4,84 @@ export const scheduleMock = {
       id: "company",
       name: "全社カレンダー",
       color: "#0ea5e9",
-      description: "全社向けの共有イベントやお知らせを記録します。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "development",
       name: "開発チームカレンダー",
       color: "#22c55e",
-      description: "開発チームの会議やリリース関連の予定です。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "design",
       name: "デザインチームカレンダー",
       color: "#f97316",
-      description: "デザインレビューやユーザーテストを管理します。",
     },
     {
       id: "sales",
       name: "セールスカレンダー",
       color: "#a855f7",
-      description: "商談や顧客フォローアップの予定です。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80",
     },
     // ここからスクロール挙動確認のための追加カレンダー
     {
       id: "hr",
       name: "人事カレンダー",
       color: "#ef4444",
-      description: "採用・面談スケジュールなど。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "pr",
       name: "広報カレンダー",
       color: "#10b981",
-      description: "プレスリリース・告知関連。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "marketing",
       name: "マーケカレンダー",
       color: "#f59e0b",
-      description: "キャンペーン・広告運用。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "support",
       name: "サポートカレンダー",
       color: "#3b82f6",
-      description: "サポート対応・当番シフト。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "backoffice",
       name: "バックオフィス",
       color: "#8b5cf6",
-      description: "経理・法務の予定。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "infra",
       name: "インフラチーム",
       color: "#14b8a6",
-      description: "メンテナンス・監視関連。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "qa",
       name: "QA カレンダー",
       color: "#84cc16",
-      description: "テスト計画・検証。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "product",
       name: "プロダクトカレンダー",
       color: "#06b6d4",
-      description: "ロードマップ・要件整理。",
+      imageUrl:
+        "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80",
     },
   ],
   items: [
@@ -110,7 +120,7 @@ export const scheduleMock = {
       location: "カフェテリア",
       status: "success",
       start: "2025-10-04T12:00:00+09:00",
-      end: "2025-10-04T13:00:00+09:00",
+      end: "2025-10-20T13:00:00+09:00",
       members: ["人事チーム"],
       calendarName: "全社カレンダー",
       calendarColor: "#0ea5e9",
@@ -226,8 +236,8 @@ export const scheduleMock = {
       memo: "先週デモ顧客との進行確認",
       location: "オンライン",
       status: "default",
-      start: "2024-04-05T10:30:00+09:00",
-      end: "2024-04-05T11:00:00+09:00",
+      start: "2025-10-21T10:30:00+09:00",
+      end: "2025-10-21T11:00:00+09:00",
       members: ["セールス部", "CS"],
       calendarName: "セールスカレンダー",
       calendarColor: "#a855f7",

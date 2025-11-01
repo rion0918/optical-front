@@ -28,6 +28,13 @@ const config: StorybookConfig = {
       ...(config.plugins || []),
       react({ jsxRuntime: "automatic" }),
     ];
+    config.define = {
+      ...(config.define ?? {}),
+      "process.env": JSON.stringify({ NODE_ENV: "development" }),
+      process: {
+        env: { NODE_ENV: "development" },
+      },
+    };
     return config;
   },
 };
