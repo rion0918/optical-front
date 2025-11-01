@@ -85,7 +85,7 @@ export function SelectCalendarCard({
       disabled={onClick == null}
       className={cn(
         "group relative min-w-[180px] flex-shrink-0 cursor-pointer overflow-hidden rounded-xl border bg-background/90 p-0 text-left shadow-sm transition hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-default",
-        className
+        className,
       )}
       style={{ borderColor: accentBorder }}
       aria-label={`${calendar.name} を開く`}
@@ -152,7 +152,7 @@ export function SelectCalendarAddCard({
     <Card
       className={cn(
         "relative min-w-[180px] flex-shrink-0 overflow-hidden rounded-xl border bg-muted/50 p-0 transition-colors hover:border-primary/50",
-        className
+        className,
       )}
     >
       <button
