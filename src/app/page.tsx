@@ -1,9 +1,8 @@
 "use client";
 
 import { CalendarDays } from "lucide-react";
-import * as React from "react";
-import { useMemo, useState } from "react";
-
+import { useRouter } from "next/navigation";
+import React, { useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/atoms/Card";
 import { CalendarBoardHeader } from "@/components/molecules/CalendarBoardHeader";
 import { ConfirmModal } from "@/components/molecules/ConfirmModal/ConfirmModal";
@@ -16,16 +15,17 @@ import {
 import { SearchHeader } from "@/components/organisms/SearchHeader/SearchHeader";
 import { SelectCalendarStrip } from "@/components/organisms/SelectCalendarStrip";
 import { TodaySchedulePanel } from "@/components/organisms/TodaySchedulePanel";
-import { type ScheduleCalendar, useSchedule } from "@/hooks/useSchedule";
+import { useSchedule } from "@/hooks/useSchedule";
 import { useUser } from "@/hooks/useUser";
 import { cn } from "@/utils_constants_styles/utils";
 
 export default function Home() {
   const { items, calendars, dateLabel, isLoading, error } = useSchedule();
+  const router = useRouter();
   const [viewDate, setViewDate] = useState(() => startOfDay(new Date()));
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCalendars, setSelectedCalendars] = useState<string[]>([]);
-  const [addedCalendars, setAddedCalendars] = useState<ScheduleCalendar[]>([]);
+  const mergedCalendars = calendars;
 
   const filteredItems = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
@@ -69,19 +69,12 @@ export default function Home() {
     });
   }, [filteredItems]);
 
-  const mergedCalendars = useMemo(() => {
-    const byId = new Map<string, ScheduleCalendar>();
-    for (const c of calendars) byId.set(c.id, c);
-    for (const c of addedCalendars) byId.set(c.id, c);
-    return Array.from(byId.values());
-  }, [calendars, addedCalendars]);
-
   const calendarOptions = useMemo(() => {
-    return mergedCalendars.map((calendar) => ({
+    return calendars.map((calendar) => ({
       label: calendar.name,
       value: calendar.id,
     }));
-  }, [mergedCalendars]);
+  }, [calendars]);
 
   const boardHeader = useMemo(
     () => ({
@@ -173,29 +166,20 @@ export default function Home() {
         calendars={mergedCalendars}
         onSelectCalendar={(cal) => {
           console.log(`[navigate] 単体カレンダーページへ遷移: ${cal.name}`);
+          //ここに将来的に単体スケジュールページに遷移するロジックを実装する
+          //router.push(`/calendars/${cal.id}`);
         }}
         onAddCalendar={() => {
-          // 簡易的に新規カレンダーを追加（即時に検索バーへも反映）
-          const idx = addedCalendars.length + 1;
-          const palette = [
-            "#ef4444",
-            "#10b981",
-            "#f59e0b",
-            "#3b82f6",
-            "#8b5cf6",
-            "#14b8a6",
-            "#84cc16",
-            "#06b6d4",
-          ];
-          const color = palette[(idx - 1) % palette.length];
-          const newCal: ScheduleCalendar = {
-            id: `local-${Date.now()}-${idx}`,
-            name: `新規カレンダー ${idx}`,
-            color,
-          };
-          setAddedCalendars((prev) => [...prev, newCal]);
-          console.log("[navigate] 単体スケジュール作成画面へ遷移");
+          router.push("/calendars/new");
         }}
+      />
+
+      {/* メールアドレス変更確認モーダル */}
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        message={`メールアドレスを「${pendingEmail}」に変更しますか？`}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
       />
 
       {/* メールアドレス変更確認モーダル */}

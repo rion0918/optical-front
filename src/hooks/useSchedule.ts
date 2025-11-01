@@ -10,6 +10,7 @@ export type ScheduleCalendar = {
   name: string;
   color: string;
   description?: string;
+  imageUrl?: string;
 };
 
 export type ScheduleItem = {

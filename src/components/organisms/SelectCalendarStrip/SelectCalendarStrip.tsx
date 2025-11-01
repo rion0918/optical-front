@@ -24,16 +24,10 @@ export function SelectCalendarStrip({
   onAddCalendar,
 }: SelectCalendarStripProps) {
   const handleSelect = (calendar: SelectCalendarStripItem) => {
-    // 仮の遷移動作: クリック時にログを出力
-    console.log(
-      `[navigate] 単体カレンダーページへ遷移: ${calendar.name} (${calendar.id})`,
-    );
     onSelectCalendar?.(calendar);
   };
 
   const handleAdd = () => {
-    // 仮の遷移動作: クリック時にログを出力
-    console.log("[navigate] 単体スケジュール作成画面へ遷移");
     onAddCalendar?.();
   };
 

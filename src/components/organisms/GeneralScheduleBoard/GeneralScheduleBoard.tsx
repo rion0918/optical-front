@@ -48,10 +48,11 @@ type CalendarEvent = {
   members?: string[];
   calendarName?: string;
   calendarColor?: string;
-  startLabel: string;
+  startLabel?: string;
   endLabel?: string;
   date: Date;
   item: GeneralScheduleBoardItem;
+  sortKey: number;
 };
 
 export function GeneralScheduleBoard({
@@ -223,26 +224,58 @@ function groupEventsByDay(items: GeneralScheduleBoardItem[]) {
   });
 
   for (const item of sorted) {
-    const date = parseDate(item.start);
-    if (!date) continue;
-    const key = formatDateKey(date);
-    const bucket = map.get(key) ?? [];
-    const endDate = item.end ? parseDate(item.end) : null;
-    bucket.push({
-      id: item.id,
-      title: item.title,
-      memo: item.memo,
-      location: item.location,
-      locationUrl: item.locationUrl,
-      members: item.members,
-      calendarName: item.calendarName,
-      calendarColor: item.calendarColor,
-      startLabel: formatTimeLabel(date),
-      endLabel: endDate ? formatTimeLabel(endDate) : undefined,
-      date,
-      item,
-    });
-    map.set(key, bucket);
+    const startDateTime = parseDate(item.start);
+    if (!startDateTime) continue;
+    const endDateTimeRaw = item.end ? parseDate(item.end) : null;
+    const endDateTime =
+      endDateTimeRaw && endDateTimeRaw.getTime() >= startDateTime.getTime()
+        ? endDateTimeRaw
+        : null;
+
+    const rangeStart = normalizeDate(startDateTime);
+    const rangeEnd = normalizeDate(endDateTime ?? startDateTime);
+
+    for (
+      let current = new Date(rangeStart);
+      current.getTime() <= rangeEnd.getTime();
+      current.setDate(current.getDate() + 1)
+    ) {
+      const currentDate = new Date(current);
+      const key = formatDateKey(currentDate);
+      const bucket = map.get(key) ?? [];
+
+      const isStartDay = isSameDay(currentDate, startDateTime);
+      const isEndDay = endDateTime
+        ? isSameDay(currentDate, endDateTime)
+        : isStartDay;
+
+      bucket.push({
+        id: item.id,
+        title: item.title,
+        memo: item.memo,
+        location: item.location,
+        locationUrl: item.locationUrl,
+        members: item.members,
+        calendarName: item.calendarName,
+        calendarColor: item.calendarColor,
+        startLabel: isStartDay ? formatTimeLabel(startDateTime) : undefined,
+        endLabel:
+          endDateTime && isEndDay ? formatTimeLabel(endDateTime) : undefined,
+        date: currentDate,
+        item,
+        sortKey: startDateTime.getTime(),
+      });
+      map.set(key, bucket);
+    }
+  }
+
+  for (const [key, events] of map.entries()) {
+    events.sort((a, b) =>
+      a.sortKey === b.sortKey
+        ? a.id.localeCompare(b.id)
+        : a.sortKey - b.sortKey,
+    );
+    map.set(key, events);
   }
 
   return map;
