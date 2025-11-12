@@ -1,2 +1,2 @@
+export * from "./authHandlers";
 export * from "./scheduleHandlers";
-export * from "./userHandlers";

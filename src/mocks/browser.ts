@@ -12,9 +12,9 @@ let worker: WorkerInstance | null = null;
 async function initializeWorker() {
   const { setupWorker } = await import("msw/browser");
   const { scheduleHandlers } = await import("@/mocks/handlers");
-  const { userHandlers } = await import("@/mocks/handlers/userHandlers");
+  const { authHandlers } = await import("@/mocks/handlers/authHandlers");
 
-  return setupWorker(...scheduleHandlers, ...userHandlers);
+  return setupWorker(...scheduleHandlers, ...authHandlers);
 }
 
 export function startMockServiceWorker() {

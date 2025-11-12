@@ -7,6 +7,7 @@ import {
 } from "@/components/atoms/DropdownMenu";
 import { AccountMenuButton } from "@/components/molecules/AccountMenuButton/AccountMenuButton";
 import { AccountMenuItems } from "@/components/molecules/AccountMenuItems/AccountMenuItems";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/utils_constants_styles/utils";
 
 // アカウントメニューのプロパティ型
@@ -34,12 +35,25 @@ export function AccountMenu({
   onRequestEmailSave,
   confirmSaveTrigger,
 }: AccountMenuProps & { onRequestEmailSave: (newEmail: string) => void }) {
+  const { logout } = useAuth();
+
+  /**
+   * ログアウト処理を実行
+   */
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
   // メニューアイテムの定義 (必要に応じて追加可能)
   const menuItems = [
     {
       label: "ログアウト",
       icon: <LogOut className="h-4 w-4" />,
-      onSelect: () => console.log("ログアウト"), // 選択時の処理 (現在はコンソールログにて仮の動作を実装)
+      onSelect: handleLogout,
     },
   ];
 
