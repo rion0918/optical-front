@@ -2,7 +2,7 @@
 
 import { CalendarDays } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/atoms/Card";
 import { CalendarBoardHeader } from "@/components/molecules/CalendarBoardHeader";
 import { ConfirmModal } from "@/components/molecules/ConfirmModal/ConfirmModal";
@@ -19,7 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSchedule } from "@/hooks/useSchedule";
 import { cn } from "@/utils_constants_styles/utils";
 
-export default function Home() {
+function HomeContent() {
   const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -43,7 +43,11 @@ export default function Home() {
       router.replace("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [
+    searchParams,
+    refresh, // URLパラメータをクリア
+    router.replace,
+  ]);
 
   const [viewDate, setViewDate] = useState(() => startOfDay(new Date()));
   const [searchTerm, setSearchTerm] = useState("");
@@ -358,6 +362,14 @@ function BoardArea({
         />
       ) : null}
     </Card>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
 

@@ -190,11 +190,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setError(null);
 
     try {
-      // サーバー側のログアウト処理（オプション）
+      // サーバー側のログアウト処理(オプション)
       await apiPost("/api/auth/logout");
     } catch (err) {
       // ログアウトエラーは無視（トークンは削除する）
-      console.error("Logout error:", err);
+      console.warn("[AuthProvider] Logout API error (ignored):", {
+        error: err,
+        message: err instanceof Error ? err.message : "Unknown error",
+      });
     } finally {
       // ローカルの認証状態をクリア
       removeToken();

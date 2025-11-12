@@ -40,7 +40,7 @@ export function useSchedule() {
   const [data, setData] = useState<ScheduleApiResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [_refreshTrigger, setRefreshTrigger] = useState(0);
 
   const refresh = useCallback(() => {
     setRefreshTrigger((prev) => prev + 1);
@@ -92,7 +92,7 @@ export function useSchedule() {
     return () => {
       isMounted = false;
     };
-  }, [refreshTrigger]);
+  }, []);
 
   const calendars = useMemo(() => data?.calendars ?? [], [data?.calendars]);
 

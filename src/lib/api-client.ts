@@ -99,8 +99,15 @@ export async function apiRequest<T>(
 
     try {
       data = (await response.json()) as T | ApiError;
-    } catch {
+    } catch (error) {
       // JSON パースに失敗した場合
+      console.warn("[API Client] JSON parse failed:", {
+        url: endpoint,
+        status: response.status,
+        contentType,
+        error,
+      });
+
       // レスポンスが成功している場合は空オブジェクトを返す
       if (response.ok) {
         return {} as T;

@@ -88,7 +88,7 @@ export function GeneralScheduleBoard({
     <CalendarGrid className={className}>
       <div className="relative flex min-h-0 flex-1 flex-col pb-2.5">
         {isLoading ? (
-          <CalendarSkeleton />
+          <CalendarSkeleton weeksCount={calendarWeeks.length || 5} />
         ) : (
           <>
             {calendarWeeks.map((week, weekIndex) => (
@@ -96,7 +96,7 @@ export function GeneralScheduleBoard({
                 key={`week-${week[0]?.key ?? weekIndex}`}
                 className="grid min-h-0 flex-1 grid-cols-7 border-b border-white/5 last:border-b-0"
               >
-                {week.map((cell, dayIndex) => {
+                {week.map((cell, _dayIndex) => {
                   const events = eventsByDay.get(cell.key) ?? [];
                   const isWeekend = cell.weekday >= 5;
 
@@ -104,11 +104,10 @@ export function GeneralScheduleBoard({
                     <div
                       key={cell.key}
                       className={cn(
-                        "relative flex flex-1 min-h-0 flex-col gap-0.5 overflow-hidden border-r border-white/5 bg-slate-950/40 p-0.5 transition-colors",
+                        "relative flex flex-1 min-h-0 flex-col gap-0.5 overflow-hidden bg-slate-950/40 p-0.5 transition-colors",
                         !cell.isCurrentMonth &&
                           "bg-slate-950/10 text-muted-foreground/70",
                         isWeekend && cell.isCurrentMonth && "bg-slate-950/55",
-                        dayIndex === week.length - 1 && "border-r-0",
                       )}
                     >
                       {cell.isToday ? (
@@ -192,12 +191,26 @@ function buildCalendarCells(baseDate: Date): CalendarCell[] {
   const month = baseDate.getMonth();
 
   const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+
   const firstWeekday = toMondayStartWeekday(firstDayOfMonth.getDay());
+  const lastWeekday = toMondayStartWeekday(lastDayOfMonth.getDay());
+
+  // 前月分のセル数
+  const prevMonthDays = firstWeekday;
+  // 当月の日数
+  const currentMonthDays = lastDayOfMonth.getDate();
+  // 次月分のセル数（最終週を埋めるため）
+  const nextMonthDays = lastWeekday === 6 ? 0 : 6 - lastWeekday;
+
+  // 必要な総セル数
+  const totalCells = prevMonthDays + currentMonthDays + nextMonthDays;
+
   const firstDate = new Date(firstDayOfMonth);
   firstDate.setDate(firstDate.getDate() - firstWeekday);
 
   const cells: CalendarCell[] = [];
-  for (let index = 0; index < 42; index++) {
+  for (let index = 0; index < totalCells; index++) {
     const date = new Date(firstDate);
     date.setDate(firstDate.getDate() + index);
     const key = formatDateKey(date);
@@ -327,18 +340,21 @@ function formatTimeLabel(date: Date) {
   }).format(date);
 }
 
-const SKELETON_CELL_KEYS = Array.from(
-  { length: 42 },
-  (_, index) => `skeleton-cell-${index}`,
-);
+function CalendarSkeleton({ weeksCount = 5 }: { weeksCount?: number }) {
+  const skeletonCellKeys = Array.from(
+    { length: weeksCount * 7 },
+    (_, index) => `skeleton-cell-${index}`,
+  );
 
-function CalendarSkeleton() {
   return (
-    <div className="absolute inset-0 grid grid-cols-7 grid-rows-6">
-      {SKELETON_CELL_KEYS.map((cellKey) => (
+    <div
+      className="absolute inset-0 grid grid-cols-7"
+      style={{ gridTemplateRows: `repeat(${weeksCount}, minmax(0, 1fr))` }}
+    >
+      {skeletonCellKeys.map((cellKey) => (
         <div
           key={cellKey}
-          className="flex min-h-0 flex-col gap-2 border-r border-b border-white/5 bg-slate-950/40 p-2"
+          className="flex min-h-0 flex-col gap-2 border-b border-white/5 bg-slate-950/40 p-2"
         >
           <Skeleton className="h-3.5 w-7" />
           <Skeleton className="h-2.5 w-16" />
