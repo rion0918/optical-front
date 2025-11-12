@@ -6,7 +6,7 @@
  */
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { saveToken } from "@/lib/auth";
@@ -14,7 +14,7 @@ import { saveToken } from "@/lib/auth";
 /**
  * OAuth コールバックページコンポーネント
  */
-export default function CallbackPage() {
+function CallbackPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { refreshAuth } = useAuth();
@@ -130,5 +130,46 @@ export default function CallbackPage() {
         )}
       </div>
     </div>
+  );
+}
+
+/**
+ * Suspenseでラップしたエクスポート
+ */
+export default function CallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="text-center space-y-4">
+            <svg
+              className="animate-spin h-16 w-16 mx-auto text-blue-600"
+              viewBox="0 0 24 24"
+              role="status"
+              aria-label="読み込み中"
+            >
+              <title>Loading</title>
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="none"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              />
+            </svg>
+            <h2 className="text-2xl font-bold text-gray-900">読み込み中...</h2>
+          </div>
+        </div>
+      }
+    >
+      <CallbackPageContent />
+    </Suspense>
   );
 }
