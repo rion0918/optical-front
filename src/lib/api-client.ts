@@ -158,31 +158,3 @@ export async function apiPost<T>(
     body: body ? JSON.stringify(body) : undefined,
   });
 }
-
-/**
- * PUT リクエスト
- */
-export async function apiPut<T>(
-  endpoint: string,
-  body?: unknown,
-  options?: ApiRequestOptions,
-): Promise<T> {
-  return apiRequest<T>(endpoint, {
-    ...options,
-    method: "PUT",
-    body: body ? JSON.stringify(body) : undefined,
-  });
-}
-
-/**
- * DELETE リクエスト
- */
-export async function apiDelete<T>(
-  endpoint: string,
-  options?: ApiRequestOptions,
-): Promise<T> {
-  return apiRequest<T>(endpoint, {
-    ...options,
-    method: "DELETE",
-  });
-}
