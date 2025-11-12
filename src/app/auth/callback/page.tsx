@@ -100,7 +100,28 @@ export default function CallbackPage() {
           </>
         ) : (
           <>
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto" />
+            <svg
+              className="animate-spin h-16 w-16 mx-auto text-blue-600"
+              viewBox="0 0 24 24"
+              role="status"
+              aria-label="認証中"
+            >
+              <title>Loading</title>
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="none"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              />
+            </svg>
             <h2 className="text-2xl font-bold text-gray-900">認証中...</h2>
             <p className="text-gray-600">
               Google認証を処理しています。しばらくお待ちください。

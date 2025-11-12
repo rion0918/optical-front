@@ -53,7 +53,6 @@ export const scheduleHandlers = [
       const userCalendars = scheduleMock.calendars.filter(
         (calendar) => calendar.userId === userId,
       );
-      const _userCalendarIds = userCalendars.map((calendar) => calendar.id);
       const userItems = scheduleMock.items.filter(
         (item) => item.userId === userId,
       );

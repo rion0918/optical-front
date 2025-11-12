@@ -134,7 +134,28 @@ export function LoginForm() {
           >
             {isLoading ? (
               <span className="flex items-center gap-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                <svg
+                  className="animate-spin h-4 w-4 text-white"
+                  viewBox="0 0 16 16"
+                  role="status"
+                  aria-label="ログイン中"
+                >
+                  <title>Loading</title>
+                  <circle
+                    className="opacity-25"
+                    cx="8"
+                    cy="8"
+                    r="6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M8 2a6 6 0 0 1 6 6"
+                  />
+                </svg>
                 ログイン中...
               </span>
             ) : (

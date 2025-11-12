@@ -101,16 +101,7 @@ export function findUserById(id: string): User | undefined {
 }
 
 /**
- * Google ID からユーザーを検索
- */
-export function findUserByGoogleId(googleId: string): User | undefined {
-  const userId = mockGoogleIds[googleId];
-  if (!userId) return undefined;
-  return findUserById(userId);
-}
-
-/**
- * 新しいユーザーを追加（モック用）
+ * 新しいユーザーを追加(モック用)
  */
 export function addMockUser(user: User): void {
   mockUsers.push(user);

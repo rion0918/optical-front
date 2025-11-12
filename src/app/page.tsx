@@ -35,17 +35,6 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCalendars, setSelectedCalendars] = useState<string[]>([]);
 
-  // カレンダーはuseScheduleから取得したものをそのまま使用（既にユーザーでフィルタリング済み）
-  const mergedCalendars = useMemo(() => {
-    return calendars.map((cal) => ({
-      id: cal.id,
-      name: cal.name,
-      color: cal.color,
-      description: cal.description,
-      imageUrl: cal.imageUrl,
-    }));
-  }, [calendars]);
-
   const filteredItems = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
     const calendarFilter = new Set(selectedCalendars);
@@ -190,7 +179,7 @@ export default function Home() {
         </div>
       </main>
       <SelectCalendarStrip
-        calendars={mergedCalendars}
+        calendars={calendars}
         onSelectCalendar={(cal) => {
           console.log(`[navigate] 単体カレンダーページへ遷移: ${cal.name}`);
           //ここに将来的に単体スケジュールページに遷移するロジックを実装する

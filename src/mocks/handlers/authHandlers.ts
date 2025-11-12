@@ -300,10 +300,7 @@ export const authHandlers = [
       );
     }
 
-    // モック用: code から Google ID を抽出
-    const _googleId = code.replace("mock-code-", "");
-
-    // Google ID からユーザーを検索（既存ユーザー）
+    // Google ID からユーザーを検索(既存ユーザー)
     const user = findUserById("user-1"); // モックなので固定
 
     if (!user) {
