@@ -1,7 +1,7 @@
 "use client";
 
 import { CalendarDays } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/atoms/Card";
 import { CalendarBoardHeader } from "@/components/molecules/CalendarBoardHeader";
@@ -22,6 +22,7 @@ import { cn } from "@/utils_constants_styles/utils";
 export default function Home() {
   const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // 認証チェック: 未認証の場合はランディングページにリダイレクト
   useEffect(() => {
@@ -30,7 +31,20 @@ export default function Home() {
     }
   }, [user, authLoading, router]);
 
-  const { items, calendars, dateLabel, isLoading, error } = useSchedule();
+  const { items, calendars, dateLabel, isLoading, error, refresh } =
+    useSchedule();
+
+  // URLパラメータでrefresh=trueが指定されている場合、データを再取得
+  useEffect(() => {
+    const shouldRefresh = searchParams.get("refresh") === "true";
+    if (shouldRefresh) {
+      refresh();
+      // URLパラメータをクリア
+      router.replace("/");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
   const [viewDate, setViewDate] = useState(() => startOfDay(new Date()));
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCalendars, setSelectedCalendars] = useState<string[]>([]);

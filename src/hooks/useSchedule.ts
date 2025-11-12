@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { StatusDotVariant } from "@/components/atoms/StatusDot";
 import type { TodaySchedulePanelItem } from "@/components/organisms/TodaySchedulePanel";
 import { getToken } from "@/lib/auth";
@@ -40,6 +40,11 @@ export function useSchedule() {
   const [data, setData] = useState<ScheduleApiResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const refresh = useCallback(() => {
+    setRefreshTrigger((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -87,7 +92,7 @@ export function useSchedule() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [refreshTrigger]);
 
   const calendars = useMemo(() => data?.calendars ?? [], [data?.calendars]);
 
@@ -141,6 +146,7 @@ export function useSchedule() {
     dateLabel,
     isLoading,
     error,
+    refresh,
   };
 }
 

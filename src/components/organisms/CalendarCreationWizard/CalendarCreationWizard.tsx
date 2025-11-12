@@ -3,6 +3,7 @@
 import { CheckCircle2, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type ChangeEvent, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/atoms/Button";
 import {
@@ -22,6 +23,8 @@ import {
 import { CalendarWizardStepIndicator } from "@/components/molecules/CalendarWizardStepIndicator";
 import { CalendarWizardSummary } from "@/components/molecules/CalendarWizardSummary";
 import { ConfirmModal } from "@/components/molecules/ConfirmModal";
+import { ApiClientError, apiPost } from "@/lib/api-client";
+import { startMockServiceWorker } from "@/mocks/browser";
 
 type StepKey = 0 | 1 | 2;
 
@@ -382,24 +385,48 @@ export function CalendarCreationWizard() {
     setIsSubmitting(true);
     setIsConfirmModalOpen(false);
 
-    const _payload = {
-      name: state.name.trim(),
-      color: state.color,
-      members: state.useSolo
-        ? []
-        : state.members
-            .map((member) => member.email.trim())
-            .filter((email) => email.length > 0),
-      template: state.selectedTemplateId,
-      customOptions: Object.entries(state.customOptions)
-        .filter(([, enabled]) => enabled)
-        .map(([key]) => key),
-      imageFileName: state.imageFile?.name ?? null,
-    };
+    try {
+      // モックサービスワーカーを起動
+      if (typeof window !== "undefined") {
+        console.log("[CalendarCreationWizard] Starting MSW...");
+        await startMockServiceWorker();
+        // MSWが完全に起動するまで少し待機
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        console.log("[CalendarCreationWizard] MSW started");
+      }
 
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    setIsSubmitting(false);
-    setIsComplete(true);
+      const payload = {
+        name: state.name.trim(),
+        color: state.color,
+        members: state.useSolo
+          ? []
+          : state.members
+              .map((member) => member.email.trim())
+              .filter((email) => email.length > 0),
+        template: state.selectedTemplateId,
+        customOptions: Object.entries(state.customOptions)
+          .filter(([, enabled]) => enabled)
+          .map(([key]) => key),
+        imageFileName: state.imageFile?.name ?? null,
+      };
+
+      console.log(
+        "[CalendarCreationWizard] Calling POST /api/calendars",
+        payload,
+      );
+      await apiPost("/api/calendars", payload);
+      setIsSubmitting(false);
+      setIsComplete(true);
+      toast.success("カレンダーを作成しました");
+    } catch (error) {
+      setIsSubmitting(false);
+      const errorMessage =
+        error instanceof ApiClientError
+          ? error.message
+          : "カレンダーの作成に失敗しました";
+      toast.error(errorMessage);
+      console.error("Failed to create calendar:", error);
+    }
   };
 
   const handleConfirmSubmit = () => {
@@ -472,7 +499,7 @@ export function CalendarCreationWizard() {
             <Button
               type="button"
               className="order-1 w-full sm:order-2 sm:w-auto"
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/?refresh=true")}
             >
               ダッシュボードに戻る
             </Button>

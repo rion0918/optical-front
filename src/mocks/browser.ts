@@ -14,6 +14,11 @@ async function initializeWorker() {
   const { scheduleHandlers } = await import("@/mocks/handlers");
   const { authHandlers } = await import("@/mocks/handlers/authHandlers");
 
+  console.log("[MSW] Setting up handlers:", {
+    scheduleHandlers: scheduleHandlers.length,
+    authHandlers: authHandlers.length,
+  });
+
   return setupWorker(...scheduleHandlers, ...authHandlers);
 }
 
@@ -28,18 +33,33 @@ export function startMockServiceWorker() {
 
   window.__mswStartPromise = (async () => {
     const shouldMock = process.env.NEXT_PUBLIC_API_MOCKING !== "false";
+    console.log(
+      "[MSW] shouldMock:",
+      shouldMock,
+      "NODE_ENV:",
+      process.env.NODE_ENV,
+    );
     if (!shouldMock || process.env.NODE_ENV === "production") {
       return;
     }
 
     if (window.__mswWorkerStarted) {
+      console.log("[MSW] Worker already started");
       return;
     }
 
+    console.log("[MSW] Initializing worker...");
     worker = worker ?? (await initializeWorker());
 
-    await worker?.start({ onUnhandledRequest: "bypass" });
+    console.log("[MSW] Starting worker...");
+    await worker?.start({
+      onUnhandledRequest: "warn",
+      serviceWorker: {
+        url: "/mockServiceWorker.js",
+      },
+    });
     window.__mswWorkerStarted = true;
+    console.log("[MSW] Worker started successfully");
   })();
 
   return window.__mswStartPromise;

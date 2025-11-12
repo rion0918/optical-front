@@ -68,9 +68,21 @@ export async function apiRequest<T>(
   // リクエストの実行
   try {
     const url = `${API_BASE_URL}${endpoint}`;
+    console.log("[API Client] Sending request:", {
+      url,
+      method: fetchOptions.method || "GET",
+      hasAuth: !!requestHeaders.Authorization,
+    });
+
     const response = await fetch(url, {
       ...fetchOptions,
       headers: requestHeaders,
+    });
+
+    console.log("[API Client] Response received:", {
+      url,
+      status: response.status,
+      statusText: response.statusText,
     });
 
     // レスポンスの解析
