@@ -2,7 +2,7 @@
 
 import { CalendarDays } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/atoms/Card";
 import { CalendarBoardHeader } from "@/components/molecules/CalendarBoardHeader";
 import { ConfirmModal } from "@/components/molecules/ConfirmModal/ConfirmModal";
@@ -15,17 +15,36 @@ import {
 import { SearchHeader } from "@/components/organisms/SearchHeader/SearchHeader";
 import { SelectCalendarStrip } from "@/components/organisms/SelectCalendarStrip";
 import { TodaySchedulePanel } from "@/components/organisms/TodaySchedulePanel";
+import { useAuth } from "@/hooks/useAuth";
 import { useSchedule } from "@/hooks/useSchedule";
-import { useUser } from "@/hooks/useUser";
 import { cn } from "@/utils_constants_styles/utils";
 
 export default function Home() {
-  const { items, calendars, dateLabel, isLoading, error } = useSchedule();
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
+
+  // 認証チェック: 未認証の場合はランディングページにリダイレクト
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/landing");
+    }
+  }, [user, authLoading, router]);
+
+  const { items, calendars, dateLabel, isLoading, error } = useSchedule();
   const [viewDate, setViewDate] = useState(() => startOfDay(new Date()));
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCalendars, setSelectedCalendars] = useState<string[]>([]);
-  const mergedCalendars = calendars;
+
+  // カレンダーはuseScheduleから取得したものをそのまま使用（既にユーザーでフィルタリング済み）
+  const mergedCalendars = useMemo(() => {
+    return calendars.map((cal) => ({
+      id: cal.id,
+      name: cal.name,
+      color: cal.color,
+      description: cal.description,
+      imageUrl: cal.imageUrl,
+    }));
+  }, [calendars]);
 
   const filteredItems = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
@@ -88,9 +107,6 @@ export default function Home() {
     setViewDate(startOfDay(next));
   };
 
-  // ユーザー情報の取得
-  const { user, isLoading: userLoading, error: userError } = useUser();
-
   // モーダル制御用の state
   const [isConfirmOpen, setIsConfirmOpen] = React.useState(false);
   const [pendingEmail, setPendingEmail] = React.useState<string | null>(null);
@@ -118,6 +134,17 @@ export default function Home() {
     setPendingEmail(null);
   };
 
+  // 認証中またはリダイレクト中はローディング表示
+  if (authLoading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-muted/10">
       <header className="border-b border-border bg-card/80 backdrop-blur">
@@ -134,8 +161,8 @@ export default function Home() {
           <div className="ml-auto h-10 w-10">
             <AccountMenu
               user={user}
-              isLoading={userLoading}
-              error={userError}
+              isLoading={authLoading}
+              error={null}
               onRequestEmailSave={handleRequestEmailSave}
               confirmSaveTrigger={confirmSaveTrigger}
             />

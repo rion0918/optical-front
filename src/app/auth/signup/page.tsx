@@ -1,0 +1,96 @@
+"use client";
+
+/**
+ * サインアップページ
+ */
+
+import { Calendar } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { GoogleLoginButton } from "@/components/atoms/GoogleLoginButton";
+import { SignupForm } from "@/components/molecules/SignupForm";
+import { useAuth } from "@/hooks/useAuth";
+
+/**
+ * サインアップページコンポーネント
+ */
+export default function SignupPage() {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+
+  // 既に認証済みの場合はカレンダーページにリダイレクト
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.push("/");
+    }
+  }, [user, isLoading, router]);
+
+  // ローディング中
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 未認証の場合のみサインアップフォームを表示
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-12">
+        <div className="w-full max-w-md space-y-8">
+          {/* ヘッダー */}
+          <div className="text-center space-y-4">
+            <Link
+              href="/landing"
+              className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+            >
+              <Calendar className="w-8 h-8 text-white" />
+            </Link>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
+              OptiCal
+            </h1>
+            <p className="text-base text-gray-600">
+              アカウントを作成してカレンダーを始めましょう
+            </p>
+          </div>
+
+          {/* サインアップフォーム */}
+          <SignupForm />
+
+          {/* 区切り線 */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-gradient-to-br from-blue-50 via-white to-purple-50 text-gray-500">
+                または
+              </span>
+            </div>
+          </div>
+
+          {/* Google サインアップ */}
+          <GoogleLoginButton label="Googleでサインアップ" />
+
+          {/* フッター */}
+          <p className="text-center text-sm text-gray-600">
+            既にアカウントをお持ちの方は
+            <Link
+              href="/auth/login"
+              className="ml-1 font-medium text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+            >
+              ログイン
+            </Link>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}

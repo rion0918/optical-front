@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { StatusDotVariant } from "@/components/atoms/StatusDot";
 import type { TodaySchedulePanelItem } from "@/components/organisms/TodaySchedulePanel";
+import { getToken } from "@/lib/auth";
 import { startMockServiceWorker } from "@/mocks/browser";
 
 export type ScheduleCalendar = {
@@ -50,7 +51,18 @@ export function useSchedule() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch("/api/today-schedule");
+        // 認証トークンを取得
+        const token = getToken();
+        if (!token) {
+          throw new Error("認証トークンがありません");
+        }
+
+        const response = await fetch("/api/today-schedule", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!response.ok) {
           throw new Error(`Failed to fetch: ${response.status}`);
         }
