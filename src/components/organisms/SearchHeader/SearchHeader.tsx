@@ -69,20 +69,20 @@ export function SearchHeader({
         </div>
 
         {/* カレンダーフィルター */}
-        <div className="w-[180px]">
+        <div className="w-[190px]">
           <MultiSelectDropdown
             options={availableCalendars}
-            placeholder="全てのカレンダー"
+            placeholder="カレンダーの指定"
             value={calendar}
             onChange={handleCalendarChange}
           />
         </div>
 
         {/* 期間フィルター */}
-        <div className="w-[100px]">
+        <div className="w-[120px]">
           <MultiSelectDropdown
             options={(yearOptions ?? []).map((y) => y.toString())}
-            placeholder="全期間"
+            placeholder="年数の指定"
             value={period}
             onChange={setPeriod}
           />
