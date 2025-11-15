@@ -11,7 +11,7 @@ type SearchHeaderProps = {
   calendarOptions?: Array<string | LabeledOption>;
   selectedCalendars?: string[];
   onCalendarChange?: (value: string[]) => void;
-  periodOptions?: string[];
+  yearOptions?: number[];
 };
 
 export function SearchHeader({
@@ -20,7 +20,7 @@ export function SearchHeader({
   calendarOptions,
   selectedCalendars,
   onCalendarChange,
-  periodOptions,
+  yearOptions,
 }: SearchHeaderProps) {
   const [search, setSearch] = useState(searchValue ?? ""); // 検索バーの入力値
   const [calendar, setCalendar] = useState<string[]>(selectedCalendars ?? []); // カレンダーフィルターの選択値
@@ -37,10 +37,6 @@ export function SearchHeader({
   const availableCalendars = useMemo(() => {
     return calendarOptions ?? [];
   }, [calendarOptions]);
-
-  const availablePeriods = useMemo(() => {
-    return periodOptions ?? [];
-  }, [periodOptions]);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -85,7 +81,7 @@ export function SearchHeader({
         {/* 期間フィルター */}
         <div className="w-[100px]">
           <MultiSelectDropdown
-            options={availablePeriods}
+            options={(yearOptions ?? []).map((y) => y.toString())}
             placeholder="全期間"
             value={period}
             onChange={setPeriod}
