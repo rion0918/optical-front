@@ -9,7 +9,6 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/atoms/DropdownMenu";
-import { ScrollArea } from "@/components/atoms/ScrollArea";
 
 type Option = string | { label: string; value: string };
 
@@ -46,11 +45,6 @@ export function MultiSelectDropdown({
   }, [normalized]);
 
   const MAX_VISIBLE_OPTIONS = 3;
-  const ITEM_HEIGHT_PX = 40;
-  const shouldScroll = normalized.length > MAX_VISIBLE_OPTIONS;
-  const scrollAreaMaxHeight = shouldScroll
-    ? MAX_VISIBLE_OPTIONS * ITEM_HEIGHT_PX
-    : undefined;
 
   // open/close 管理
   const handleOpenChange = (isOpen: boolean) => {
@@ -94,29 +88,20 @@ export function MultiSelectDropdown({
 
       <DropdownMenuPortal>
         <DropdownMenuContent sideOffset={4} className="p-0">
-          <ScrollArea
-            className="w-full"
-            style={
-              scrollAreaMaxHeight
-                ? { maxHeight: `${scrollAreaMaxHeight}px` }
-                : undefined
-            }
-          >
-            <div className="py-1">
-              {normalized.map((option) => (
-                <DropdownMenuCheckboxItem
-                  key={option.value}
-                  checked={value.includes(option.value)}
-                  onCheckedChange={(checked) =>
-                    handleTempChange(option.value, checked)
-                  }
-                  onSelect={(e) => e.preventDefault()} // チェック後に閉じないように
-                >
-                  {option.label}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </div>
-          </ScrollArea>
+          <div className="py-1">
+            {normalized.slice(0, MAX_VISIBLE_OPTIONS).map((option) => (
+              <DropdownMenuCheckboxItem
+                key={option.value}
+                checked={value.includes(option.value)}
+                onCheckedChange={(checked) =>
+                  handleTempChange(option.value, checked)
+                }
+                onSelect={(e) => e.preventDefault()} // チェック後に閉じないように
+              >
+                {option.label}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </div>
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenu>
