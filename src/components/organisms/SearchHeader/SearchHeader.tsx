@@ -59,7 +59,7 @@ export function SearchHeader({
     <div className="space-y-4">
       <div className="flex gap-2 items-center">
         {/* 検索バー */}
-        <div className="w-[600px]">
+        <div className="w-[700px]">
           <SearchInput
             value={search}
             onChange={handleSearchChange}
