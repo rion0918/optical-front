@@ -48,6 +48,11 @@ export function MultiSelectDropdown({
 
   // open/close 管理
   const handleOpenChange = (isOpen: boolean) => {
+    // 空の場合は変化なし
+    if (normalized.length === 0) {
+      return;
+    }
+
     setOpen(isOpen);
   };
 
@@ -68,7 +73,9 @@ export function MultiSelectDropdown({
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="w-full flex items-center justify-between px-3"
+          className={`w-full flex items-center justify-between px-3 ${
+            normalized.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
           <span className="flex-1 min-w-0 truncate text-left">
             {value.length === 0
@@ -86,24 +93,27 @@ export function MultiSelectDropdown({
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuPortal>
-        <DropdownMenuContent sideOffset={4} className="p-0">
-          <div className="py-1">
-            {normalized.slice(0, MAX_VISIBLE_OPTIONS).map((option) => (
-              <DropdownMenuCheckboxItem
-                key={option.value}
-                checked={value.includes(option.value)}
-                onCheckedChange={(checked) =>
-                  handleTempChange(option.value, checked)
-                }
-                onSelect={(e) => e.preventDefault()} // チェック後に閉じないように
-              >
-                {option.label}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenuPortal>
+      {/** optionsが0件のときは完全に反応しなくなる */}
+      {normalized.length > 0 && (
+        <DropdownMenuPortal>
+          <DropdownMenuContent sideOffset={4} className="p-0">
+            <div className="py-1">
+              {normalized.slice(0, MAX_VISIBLE_OPTIONS).map((option) => (
+                <DropdownMenuCheckboxItem
+                  key={option.value}
+                  checked={value.includes(option.value)}
+                  onCheckedChange={(checked) =>
+                    handleTempChange(option.value, checked)
+                  }
+                  onSelect={(e) => e.preventDefault()} // チェックで閉じない
+                >
+                  {option.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenuPortal>
+      )}
     </DropdownMenu>
   );
 }
