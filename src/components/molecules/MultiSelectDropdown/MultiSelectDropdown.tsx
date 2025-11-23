@@ -73,6 +73,7 @@ export function MultiSelectDropdown({
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
+          disabled={normalized.length === 0}
           className={`w-full flex items-center justify-between px-3 ${
             normalized.length === 0 ? "opacity-50 cursor-not-allowed" : ""
           }`}
@@ -93,7 +94,7 @@ export function MultiSelectDropdown({
         </Button>
       </DropdownMenuTrigger>
 
-      {/** optionsが0件のときは完全に反応しなくなる */}
+      {/** optionsが0個のときは完全に反応しなくなる */}
       {normalized.length > 0 && (
         <DropdownMenuPortal>
           <DropdownMenuContent sideOffset={4} className="p-0">
