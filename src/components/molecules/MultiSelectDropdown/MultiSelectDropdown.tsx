@@ -44,17 +44,10 @@ export function MultiSelectDropdown({
     return m;
   }, [normalized]);
 
+  // ★ 3行分の高さ
   const MAX_VISIBLE_OPTIONS = 3;
-
-  // open/close 管理
-  const handleOpenChange = (isOpen: boolean) => {
-    // 空の場合は変化なし
-    if (normalized.length === 0) {
-      return;
-    }
-
-    setOpen(isOpen);
-  };
+  const ITEM_HEIGHT_PX = 40;
+  const scrollAreaMaxHeight = MAX_VISIBLE_OPTIONS * ITEM_HEIGHT_PX;
 
   // チェックボックスの選択管理
   const handleTempChange = (option: string, checked: CheckedState) => {
@@ -69,25 +62,21 @@ export function MultiSelectDropdown({
   };
 
   return (
-    <DropdownMenu open={open} onOpenChange={handleOpenChange}>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
+          className="w-full flex items-center justify-between px-3"
           disabled={normalized.length === 0}
-          className={`w-full flex items-center justify-between px-3 ${
-            normalized.length === 0 ? "opacity-50 cursor-not-allowed" : ""
-          }`}
         >
-          <span className="flex-1 min-w-0 truncate text-left">
+          <span className="flex-1 truncate text-left">
             {value.length === 0
               ? placeholder || "選択してください"
-              : value
-                  .map((v) => labelByValue.get(v) ?? v)
-                  .filter(Boolean)
-                  .join(", ")}
+              : value.map((v) => labelByValue.get(v) || v).join(", ")}
           </span>
+
           <ChevronDown
-            className={`ml-2 h-4 w-4 shrink-0 transition-transform ${
+            className={`ml-2 h-4 w-4 transition-transform ${
               open ? "rotate-180" : ""
             }`}
           />
@@ -98,8 +87,11 @@ export function MultiSelectDropdown({
       {normalized.length > 0 && (
         <DropdownMenuPortal>
           <DropdownMenuContent sideOffset={4} className="p-0">
-            <div className="py-1">
-              {normalized.slice(0, MAX_VISIBLE_OPTIONS).map((option) => (
+            <div
+              className="overflow-y-auto"
+              style={{ maxHeight: scrollAreaMaxHeight }}
+            >
+              {normalized.map((option) => (
                 <DropdownMenuCheckboxItem
                   key={option.value}
                   checked={value.includes(option.value)}
