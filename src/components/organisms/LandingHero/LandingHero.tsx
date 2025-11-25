@@ -1,15 +1,23 @@
 import { Button } from "@/components/atoms/Button";
+import { Text } from "@/components/atoms/Text";
 
 export const LandingHero = () => {
   return (
     <section className="h-[80vh] flex flex-col items-center justify-center text-center bg-gray-50 px-6">
-      <h1 className="text-5xl font-bold mb-4">
-        最適化されたスケジュール管理</h1>
-      <p className="text-lg text-gray-700 mb-8">
+      <Text as="h1" size="lg" weight="bold" className="text-5xl font-bold mb-4">
+        最適化されたスケジュール管理
+      </Text>
+
+      <Text as="p" size="md" className="text-lg text-gray-700 mb-8">
         あなたのスタイルに合わせてカスタムされた<br />
         スケジュール管理を始めませんか
-      </p>
-      <Button size="lg">無料で始める</Button>
+      </Text>
+
+      <Button size="lg" className="px-8" asChild>
+        <a href="/login">
+          <Text as="span" size="md" weight="medium">新規登録</Text>
+        </a>
+      </Button>
     </section>
   );
 };
