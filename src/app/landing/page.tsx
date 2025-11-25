@@ -1,7 +1,8 @@
-
 import { LandingHeader } from "@/components/organisms/LandingHeader";
 import { LandingHero } from "@/components/organisms/LandingHero";
-import { FeaturesSection } from "@/components/organisms/FeaturesSection";
+import { LandingFeaturesSection } from "@/components/organisms/LandingFeaturesSection";
+import { LandingOptionSection} from "@/components/organisms/LandingOption";
+import { LandingFooter } from "@/components/organisms/LandingFooter";
 
 export default function LandingPage() {
   return (
@@ -12,18 +13,22 @@ export default function LandingPage() {
       {/* Heroセクション */}
       <LandingHero />
 
-      {/* ダミーコンテンツ */}
       <main className="container mx-auto px-6 py-20 space-y-20">
-        <FeaturesSection />
-
-        <section id="options" className="h-[80vh] flex items-center justify-center bg-gray-100">
-          <h2 className="text-3xl font-semibold">Option 制セクション</h2>
+        <section id="features" className="scroll-mt-20">
+          {/* 商品紹介 */}
+          <LandingFeaturesSection />
         </section>
 
-        <section id="pricing" className="h-[80vh] flex items-center justify-center bg-gray-50">
-          <h2 className="text-3xl font-semibold">料金プランセクション</h2>
+        <section id="options" className="scroll-mt-20">
+          {/*オプション概要 */}
+          <LandingOptionSection />
         </section>
       </main>
+
+      {/*フッター */}
+      <div className="mt-20">
+        <LandingFooter />
+      </div>
     </div>
   );
 }
