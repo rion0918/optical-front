@@ -2,7 +2,11 @@ import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import { Text } from "@/components/atoms/Text";
 
-export const LandingHeader = () => {
+type LandingHeaderProps = {
+  onLoginClick?: () => void;
+};
+
+export const LandingHeader = ({ onLoginClick }: LandingHeaderProps) => {
   return (
     <header className="fixed top-0 left-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
       <div className="container mx-auto flex items-center justify-between px-6 py-4">
