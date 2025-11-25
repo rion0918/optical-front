@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { FeaturesSection } from "./FeaturesSection";
+import { LandingFeaturesSection } from "./LandingFeaturesSection";
 
-const meta: Meta<typeof FeaturesSection> = {
+const meta: Meta<typeof LandingFeaturesSection> = {
   title: "Organisms/FeaturesSection",
-  component: FeaturesSection,
+  component: LandingFeaturesSection,
   parameters: {
     layout: "fullscreen",
     docs: {
@@ -15,5 +15,5 @@ const meta: Meta<typeof FeaturesSection> = {
 };
 export default meta;
 
-type Story = StoryObj<typeof FeaturesSection>;
+type Story = StoryObj<typeof LandingFeaturesSection>;
 export const Default: Story = {};
