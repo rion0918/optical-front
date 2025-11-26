@@ -11,7 +11,7 @@ type SearchHeaderProps = {
   calendarOptions?: Array<string | LabeledOption>;
   selectedCalendars?: string[];
   onCalendarChange?: (value: string[]) => void;
-  periodOptions?: string[];
+  yearOptions?: number[];
 };
 
 export function SearchHeader({
@@ -20,7 +20,7 @@ export function SearchHeader({
   calendarOptions,
   selectedCalendars,
   onCalendarChange,
-  periodOptions,
+  yearOptions,
 }: SearchHeaderProps) {
   const [search, setSearch] = useState(searchValue ?? ""); // 検索バーの入力値
   const [calendar, setCalendar] = useState<string[]>(selectedCalendars ?? []); // カレンダーフィルターの選択値
@@ -37,10 +37,6 @@ export function SearchHeader({
   const availableCalendars = useMemo(() => {
     return calendarOptions ?? [];
   }, [calendarOptions]);
-
-  const availablePeriods = useMemo(() => {
-    return periodOptions ?? [];
-  }, [periodOptions]);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -63,7 +59,7 @@ export function SearchHeader({
     <div className="space-y-4">
       <div className="flex gap-2 items-center">
         {/* 検索バー */}
-        <div className="w-[600px]">
+        <div className="w-[700px]">
           <SearchInput
             value={search}
             onChange={handleSearchChange}
@@ -73,20 +69,20 @@ export function SearchHeader({
         </div>
 
         {/* カレンダーフィルター */}
-        <div className="w-[180px]">
+        <div className="w-[190px]">
           <MultiSelectDropdown
             options={availableCalendars}
-            placeholder="全てのカレンダー"
+            placeholder="カレンダーの指定"
             value={calendar}
             onChange={handleCalendarChange}
           />
         </div>
 
         {/* 期間フィルター */}
-        <div className="w-[100px]">
+        <div className="w-[120px]">
           <MultiSelectDropdown
-            options={availablePeriods}
-            placeholder="全期間"
+            options={(yearOptions ?? []).map((y) => y.toString())}
+            placeholder="年数の指定"
             value={period}
             onChange={setPeriod}
           />
