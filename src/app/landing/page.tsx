@@ -41,8 +41,8 @@ const LandingPage = () => {
         {/* Heroセクション */}
         <LandingHero />
 
-      {/* 利用ステップ */}
-      <LandingStepSection />
+        {/* 利用ステップ */}
+        <LandingStepSection />
 
       
 
