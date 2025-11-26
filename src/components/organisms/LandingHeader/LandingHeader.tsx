@@ -7,11 +7,11 @@ type LandingHeaderProps = {
 
 export const LandingHeader = ({ onLoginClick }: LandingHeaderProps) => {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
+    <header className="fixed top-0 left-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
       <div className="container mx-auto flex items-center justify-between px-6 py-4">
         {/* Logo */}
         <Text as="div" size="lg" weight="bold" className="text-xl">
-          サービスロゴ
+          OptiCal
         </Text>
 
         {/* Navigation */}

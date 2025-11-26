@@ -3,7 +3,7 @@ import { Text } from "@/components/atoms/Text";
 
 export const LandingHero = () => {
   return (
-    <section className="h-[80vh] flex flex-col items-center justify-center text-center bg-gray-50 px-6">
+    <section className="min-h-screen flex flex-col items-center justify-center text-center bg-gray-50 px-6">
       <Text as="h1" size="lg" weight="bold" className="text-5xl font-bold mb-4">
         最適化されたスケジュール管理
       </Text>
@@ -15,7 +15,7 @@ export const LandingHero = () => {
 
       <Button size="lg" className="px-8" asChild>
         <a href="/login">
-          <Text as="span" size="md" weight="medium">新規登録</Text>
+          <Text as="span" size="md" weight="medium">カレンダーを作成する</Text>
         </a>
       </Button>
     </section>
