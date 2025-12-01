@@ -3,21 +3,30 @@ import { Text } from "@/components/atoms/Text";
 
 export const LandingHero = () => {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center text-center bg-gray-50 px-6">
-      <Text as="h1" size="lg" weight="bold" className="text-5xl font-bold mb-4">
-        最適化されたスケジュール管理
-      </Text>
+    <section className="min-h-screen flex flex-col items-start justify-start text-left bg-gray-50 pt-[20%]">
+      <div className="container mx-auto px-6 flex flex-col items-start flex-grow">{/* テキストの左寄せ表示 */}
+        <div>
+          <Text as="h1" size="lg" weight="bold" className="text-5xl font-bold mb-8">
+            最適化されたスケジュール管理
+          </Text>
 
-      <Text as="p" size="md" className="text-lg text-gray-700 mb-8">
-        あなたのスタイルに合わせてカスタムされた<br />
-        スケジュール管理を始めませんか
-      </Text>
+          <Text as="p" size="md" className="text-lg text-gray-700 mb-8">
+            あなたのスタイルに合わせてカスタムされた<br />
+            スケジュール管理を始めませんか
+          </Text>
+        </div>
 
-      <Button size="lg" className="px-8" asChild>
-        <a href="/login">
-          <Text as="span" size="md" weight="medium">カレンダーを作成する</Text>
-        </a>
-      </Button>
+        {/* ボタンは右寄せ表示 */}
+        <div className="mt-auto pb-[10%] flex justify-end w-full">
+          <Button size="lg" className="px-25 mr-[10%]" asChild>
+            <a href="/login">
+              <Text as="span" size="md" weight="medium">
+                カレンダーを作成する
+              </Text>
+            </a>
+          </Button>
+        </div>
+      </div>
     </section>
   );
 };
