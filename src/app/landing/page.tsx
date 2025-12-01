@@ -44,8 +44,7 @@ const LandingPage = () => {
       {/* 利用ステップ */}
       <LandingStepSection />
 
-      {/* 利用ステップ */}
-      <LandingStepSection />
+      
 
       <main className="container mx-auto px-6 py-20 space-y-20">
         <section id="step" className="scroll-mt-20">
