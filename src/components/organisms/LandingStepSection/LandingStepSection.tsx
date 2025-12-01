@@ -38,6 +38,17 @@ export const LandingStepSection = () => {
                         </div>
                     ))}
                 </div>
+                {/* デモ動画セクション */}
+                <div className="relative w-full max-w-2xl mx-auto mt-12 mb-12" style={{ paddingTop: '56.25%' }}> {/* 16:9のアスペクト比を維持 */}
+                    <iframe
+                        className="absolute top-0 left-0 w-full h-full rounded-lg shadow-xl"
+                            src=""//動画URLをここに挿入
+                            title="サービス紹介デモ" // 動画の内容に合わせて変更してください
+                            allow="accelerometer; autoplay; clipboard-write; 
+                                    encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                    ></iframe>
+                </div>
                 <div className="container mx-auto px-6 text-center mt-12">
                     <Button size="lg" className="px-8" asChild>
                         <a href="/login">
