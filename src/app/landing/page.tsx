@@ -38,8 +38,8 @@ const LandingPage = () => {
         {/* 固定ヘッダー */}
         <LandingHeader />
 
-      {/* Heroセクション */}
-      <LandingHero />
+        {/* Heroセクション */}
+        <LandingHero />
 
       {/* 利用ステップ */}
       <LandingStepSection />
