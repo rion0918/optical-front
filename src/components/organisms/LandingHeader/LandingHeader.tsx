@@ -16,14 +16,14 @@ export const LandingHeader = ({ onLoginClick }: LandingHeaderProps) => {
 
         {/* Navigation */}
         <nav className="hidden md:flex space-x-6 text-sm font-medium">
-          <a href="#features" className="hover:text-primary">
+          <a href="#step" className="hover:text-primary">
             <Text as="span" size="sm" className="font-medium">
-              製品紹介
+              始め方
             </Text>
           </a>
-          <a href="#options" className="hover:text-primary">
+          <a href="#template" className="hover:text-primary">
             <Text as="span" size="sm" className="font-medium">
-              Option制
+              テンプレート
             </Text>
           </a>
         </nav>
