@@ -27,8 +27,8 @@ const LandingPage = () => {
         {/* 固定ヘッダー */}
         <LandingHeader />
 
-      {/* Heroセクション */}
-      <LandingHero />
+        {/* Heroセクション */}
+        <LandingHero />
 
       <main className="container mx-auto px-6 py-20 space-y-20">
         <section id="step" className="scroll-mt-20">
