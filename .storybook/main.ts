@@ -1,4 +1,5 @@
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from "@storybook/react-vite";
 import react from "@vitejs/plugin-react";
 import type { AliasOptions } from "vite";
@@ -18,7 +19,8 @@ const config: StorybookConfig = {
   viteFinal: async (config) => {
     config.resolve = config.resolve ?? {};
     const alias = config.resolve.alias ?? [];
-    const replacement = path.resolve(__dirname, "../src");
+    const dirname = path.dirname(fileURLToPath(import.meta.url));
+    const replacement = path.resolve(dirname, "../src");
     const aliasOptions: AliasOptions = Array.isArray(alias)
       ? [...alias, { find: "@", replacement }]
       : { ...alias, "@": replacement };
