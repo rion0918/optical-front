@@ -1,6 +1,7 @@
 // src/components/molecules/LandingTemplateCard/LandingTemplateCard.tsx
 "use client";
 
+import Link from "next/link";
 import { Card } from "@/components/atoms/Card";
 import { Text } from "@/components/atoms/Text";
 import { Button } from "@/components/atoms/Button";
@@ -48,11 +49,11 @@ export const LandingTemplateCard = ({ template, onClick }: Props) => {
           className="mt-4 w-full bg-black text-white rounded-xl py-3 text-center"
           onClick={() => onClick(template.id)}
         >
-          <a href="/login">
+          <Link href="/auth/signup">
             <Text as="span" size="md" weight="medium">
               このテンプレートで始める
             </Text>
-          </a>
+          </Link>
         </Button>
       </div>
     </Card>
