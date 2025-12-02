@@ -8,7 +8,8 @@ const meta: Meta<typeof LandingHero> = {
     layout: "fullscreen",
     docs: {
       description: {
-        component: "トップページ用のHeroセクション。中央揃えでキャッチコピーとCTAボタンを表示。",
+        component:
+          "トップページ用のHeroセクション。中央揃えでキャッチコピーとCTAボタンを表示。",
       },
     },
   },

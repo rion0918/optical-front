@@ -1,8 +1,9 @@
 // src/components/molecules/LandingTemplateCard/LandingTemplateCard.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
+
 import { action } from "@storybook/addon-actions";
-import { LandingTemplateCard } from "./LandingTemplateCard";
+import type { Meta, StoryObj } from "@storybook/react";
 import { templateData } from "@/components/organisms/LandingTemplateSection/TemplateData";
+import { LandingTemplateCard } from "./LandingTemplateCard";
 
 const meta: Meta<typeof LandingTemplateCard> = {
   title: "Molecules/LandingTemplateCard",
