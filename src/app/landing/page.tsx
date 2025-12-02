@@ -6,7 +6,7 @@ import { LandingStepSection } from "@/components/organisms/LandingStepSection";
 import { LandingTemplateSection } from "@/components/organisms/LandingTemplateSection";
 import { LandingFooter } from "@/components/organisms/LandingFooter";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
 const LandingPage = () => {

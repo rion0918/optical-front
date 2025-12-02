@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import { Text } from "@/components/atoms/Text";
 
@@ -16,28 +17,32 @@ export const LandingHeader = ({ onLoginClick }: LandingHeaderProps) => {
 
         {/* Navigation */}
         <nav className="hidden md:flex space-x-6 text-sm font-medium">
-          <a href="#step" className="hover:text-primary">
+          <Link href="#step" className="hover:text-primary">
             <Text as="span" size="sm" className="font-medium">
               始め方
             </Text>
-          </a>
-          <a href="#template" className="hover:text-primary">
+          </Link>
+          <Link href="#template" className="hover:text-primary">
             <Text as="span" size="sm" className="font-medium">
               テンプレート
             </Text>
-          </a>
+          </Link>
         </nav>
 
         {/* Actions */}
         <div className="flex items-center space-x-4">
-          <a href="/login" className="text-sm hover:underline">
-            <Text as="span" size="sm">ログイン</Text>
-          </a>
-          <Button size="lg" className="px-8" asChild>
-            <a href="/login">
-              <Text as="span" size="sm" weight="medium">新規登録</Text>
-            </a>
-          </Button>
+          <Link href="/auth/login" className="text-sm hover:underline">
+            <Text as="span" size="sm">
+              ログイン
+            </Text>
+          </Link>
+          <Link href="/auth/signup">
+            <Button size="lg" className="px-8" asChild>
+              <Text as="span" size="sm" weight="medium">
+                新規登録
+              </Text>
+            </Button>
+          </Link>
         </div>
       </div>
     </header>
