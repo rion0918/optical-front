@@ -11,8 +11,10 @@ export const LandingFooter = () => {
             OptiCal
           </Text>
           <Text as="span" size="sm">
-            用途に合わせた<br />
-            スケジュール管理サービス<br />
+            用途に合わせた
+            <br />
+            スケジュール管理サービス
+            <br />
           </Text>
         </div>
 
