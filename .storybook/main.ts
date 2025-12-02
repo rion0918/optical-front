@@ -21,7 +21,8 @@ const config: StorybookConfig = {
   viteFinal: async (config) => {
     config.resolve = config.resolve ?? {};
     const alias = config.resolve.alias ?? [];
-    const replacement = path.resolve(__dirname, "../src");
+    const dirname = path.dirname(fileURLToPath(import.meta.url));
+    const replacement = path.resolve(dirname, "../src");
     const aliasOptions: AliasOptions = Array.isArray(alias)
       ? [...alias, { find: "@", replacement }]
       : { ...alias, "@": replacement };
