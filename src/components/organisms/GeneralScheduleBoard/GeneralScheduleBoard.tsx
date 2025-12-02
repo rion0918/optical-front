@@ -5,6 +5,7 @@ import { Text } from "@/components/atoms/Text";
 import { CalendarGrid } from "@/components/molecules/CalendarGrid";
 import { ScheduleEventCard } from "@/components/molecules/ScheduleEventCard";
 import { cn } from "@/utils_constants_styles/utils";
+import styles from "./GeneralScheduleBoard.module.css";
 
 export type GeneralScheduleBoardItem = {
   id: string;
@@ -47,10 +48,11 @@ type CalendarEvent = {
   members?: string[];
   calendarName?: string;
   calendarColor?: string;
-  startLabel: string;
+  startLabel?: string;
   endLabel?: string;
   date: Date;
   item: GeneralScheduleBoardItem;
+  sortKey: number;
 };
 
 export function GeneralScheduleBoard({
@@ -86,7 +88,7 @@ export function GeneralScheduleBoard({
     <CalendarGrid className={className}>
       <div className="relative flex min-h-0 flex-1 flex-col pb-2.5">
         {isLoading ? (
-          <CalendarSkeleton />
+          <CalendarSkeleton weeksCount={calendarWeeks.length || 5} />
         ) : (
           <>
             {calendarWeeks.map((week, weekIndex) => (
@@ -94,7 +96,7 @@ export function GeneralScheduleBoard({
                 key={`week-${week[0]?.key ?? weekIndex}`}
                 className="grid min-h-0 flex-1 grid-cols-7 border-b border-white/5 last:border-b-0"
               >
-                {week.map((cell, dayIndex) => {
+                {week.map((cell, _dayIndex) => {
                   const events = eventsByDay.get(cell.key) ?? [];
                   const isWeekend = cell.weekday >= 5;
 
@@ -102,11 +104,10 @@ export function GeneralScheduleBoard({
                     <div
                       key={cell.key}
                       className={cn(
-                        "relative flex flex-1 min-h-0 flex-col gap-0.5 overflow-hidden border-r border-white/5 bg-slate-950/40 p-0.5 transition-colors",
+                        "relative flex flex-1 min-h-0 flex-col gap-0.5 overflow-hidden bg-slate-950/40 p-0.5 transition-colors",
                         !cell.isCurrentMonth &&
                           "bg-slate-950/10 text-muted-foreground/70",
                         isWeekend && cell.isCurrentMonth && "bg-slate-950/55",
-                        dayIndex === week.length - 1 && "border-r-0",
                       )}
                     >
                       {cell.isToday ? (
@@ -131,7 +132,12 @@ export function GeneralScheduleBoard({
                         ) : null}
                       </div>
 
-                      <div className="mt-0.5 flex min-h-0 w-full flex-1 flex-col gap-px overflow-y-auto pr-px">
+                      <div
+                        className={cn(
+                          "mt-0.5 flex min-h-0 w-full flex-1 flex-col gap-px overflow-y-auto pr-px",
+                          styles.eventsScroll,
+                        )}
+                      >
                         {events.map((event) => {
                           const handleClick = () => {
                             if (onSelectItem) {
@@ -140,25 +146,19 @@ export function GeneralScheduleBoard({
                           };
 
                           return (
-                            <ScheduleEventCard
+                            <button
                               key={event.id}
-                              title={event.title}
-                              calendarColor={event.calendarColor}
-                              variant="compact"
-                              role="button"
-                              tabIndex={0}
+                              type="button"
                               onClick={handleClick}
-                              onKeyDown={(keyboardEvent) => {
-                                if (
-                                  keyboardEvent.key === "Enter" ||
-                                  keyboardEvent.key === " "
-                                ) {
-                                  keyboardEvent.preventDefault();
-                                  handleClick();
-                                }
-                              }}
-                              className="cursor-pointer transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
-                            />
+                              className="w-full cursor-pointer rounded-sm border border-transparent text-left transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+                            >
+                              <ScheduleEventCard
+                                title={event.title}
+                                calendarColor={event.calendarColor}
+                                variant="compact"
+                                className="w-full"
+                              />
+                            </button>
                           );
                         })}
                       </div>
@@ -191,12 +191,26 @@ function buildCalendarCells(baseDate: Date): CalendarCell[] {
   const month = baseDate.getMonth();
 
   const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+
   const firstWeekday = toMondayStartWeekday(firstDayOfMonth.getDay());
+  const lastWeekday = toMondayStartWeekday(lastDayOfMonth.getDay());
+
+  // 前月分のセル数
+  const prevMonthDays = firstWeekday;
+  // 当月の日数
+  const currentMonthDays = lastDayOfMonth.getDate();
+  // 次月分のセル数（最終週を埋めるため）
+  const nextMonthDays = lastWeekday === 6 ? 0 : 6 - lastWeekday;
+
+  // 必要な総セル数
+  const totalCells = prevMonthDays + currentMonthDays + nextMonthDays;
+
   const firstDate = new Date(firstDayOfMonth);
   firstDate.setDate(firstDate.getDate() - firstWeekday);
 
   const cells: CalendarCell[] = [];
-  for (let index = 0; index < 42; index++) {
+  for (let index = 0; index < totalCells; index++) {
     const date = new Date(firstDate);
     date.setDate(firstDate.getDate() + index);
     const key = formatDateKey(date);
@@ -223,26 +237,58 @@ function groupEventsByDay(items: GeneralScheduleBoardItem[]) {
   });
 
   for (const item of sorted) {
-    const date = parseDate(item.start);
-    if (!date) continue;
-    const key = formatDateKey(date);
-    const bucket = map.get(key) ?? [];
-    const endDate = item.end ? parseDate(item.end) : null;
-    bucket.push({
-      id: item.id,
-      title: item.title,
-      memo: item.memo,
-      location: item.location,
-      locationUrl: item.locationUrl,
-      members: item.members,
-      calendarName: item.calendarName,
-      calendarColor: item.calendarColor,
-      startLabel: formatTimeLabel(date),
-      endLabel: endDate ? formatTimeLabel(endDate) : undefined,
-      date,
-      item,
-    });
-    map.set(key, bucket);
+    const startDateTime = parseDate(item.start);
+    if (!startDateTime) continue;
+    const endDateTimeRaw = item.end ? parseDate(item.end) : null;
+    const endDateTime =
+      endDateTimeRaw && endDateTimeRaw.getTime() >= startDateTime.getTime()
+        ? endDateTimeRaw
+        : null;
+
+    const rangeStart = normalizeDate(startDateTime);
+    const rangeEnd = normalizeDate(endDateTime ?? startDateTime);
+
+    for (
+      let current = new Date(rangeStart);
+      current.getTime() <= rangeEnd.getTime();
+      current.setDate(current.getDate() + 1)
+    ) {
+      const currentDate = new Date(current);
+      const key = formatDateKey(currentDate);
+      const bucket = map.get(key) ?? [];
+
+      const isStartDay = isSameDay(currentDate, startDateTime);
+      const isEndDay = endDateTime
+        ? isSameDay(currentDate, endDateTime)
+        : isStartDay;
+
+      bucket.push({
+        id: item.id,
+        title: item.title,
+        memo: item.memo,
+        location: item.location,
+        locationUrl: item.locationUrl,
+        members: item.members,
+        calendarName: item.calendarName,
+        calendarColor: item.calendarColor,
+        startLabel: isStartDay ? formatTimeLabel(startDateTime) : undefined,
+        endLabel:
+          endDateTime && isEndDay ? formatTimeLabel(endDateTime) : undefined,
+        date: currentDate,
+        item,
+        sortKey: startDateTime.getTime(),
+      });
+      map.set(key, bucket);
+    }
+  }
+
+  for (const [key, events] of map.entries()) {
+    events.sort((a, b) =>
+      a.sortKey === b.sortKey
+        ? a.id.localeCompare(b.id)
+        : a.sortKey - b.sortKey,
+    );
+    map.set(key, events);
   }
 
   return map;
@@ -294,14 +340,21 @@ function formatTimeLabel(date: Date) {
   }).format(date);
 }
 
-function CalendarSkeleton() {
+function CalendarSkeleton({ weeksCount = 5 }: { weeksCount?: number }) {
+  const skeletonCellKeys = Array.from(
+    { length: weeksCount * 7 },
+    (_, index) => `skeleton-cell-${index}`,
+  );
+
   return (
-    <div className="absolute inset-0 grid grid-cols-7 grid-rows-6">
-      {Array.from({ length: 42 }).map((_, index) => (
+    <div
+      className="absolute inset-0 grid grid-cols-7"
+      style={{ gridTemplateRows: `repeat(${weeksCount}, minmax(0, 1fr))` }}
+    >
+      {skeletonCellKeys.map((cellKey) => (
         <div
-          // eslint-disable-next-line react/no-array-index-key
-          key={index}
-          className="flex min-h-0 flex-col gap-2 border-r border-b border-white/5 bg-slate-950/40 p-2"
+          key={cellKey}
+          className="flex min-h-0 flex-col gap-2 border-b border-white/5 bg-slate-950/40 p-2"
         >
           <Skeleton className="h-3.5 w-7" />
           <Skeleton className="h-2.5 w-16" />

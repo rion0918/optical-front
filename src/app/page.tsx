@@ -1,23 +1,54 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/Avatar";
+import { CalendarDays } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/atoms/Card";
 import { CalendarBoardHeader } from "@/components/molecules/CalendarBoardHeader";
+import { ConfirmModal } from "@/components/molecules/ConfirmModal/ConfirmModal";
+import { AccountMenu } from "@/components/organisms/AccountMenu/AccountMenu";
 import {
   GeneralScheduleBoard,
-  ScheduleEventDialog,
   type GeneralScheduleBoardItem,
+  ScheduleEventDialog,
 } from "@/components/organisms/GeneralScheduleBoard";
 import { SearchHeader } from "@/components/organisms/SearchHeader/SearchHeader";
+import { SelectCalendarStrip } from "@/components/organisms/SelectCalendarStrip";
 import { TodaySchedulePanel } from "@/components/organisms/TodaySchedulePanel";
-import { useTodaySchedule } from "@/hooks/useTodaySchedule";
+import { useAuth } from "@/hooks/useAuth";
+import { useSchedule } from "@/hooks/useSchedule";
 import { cn } from "@/utils_constants_styles/utils";
-import { CalendarDays } from "lucide-react";
 
-export default function Home() {
-  const { items, calendars, dateLabel, isLoading, error } = useTodaySchedule();
+function HomeContent() {
+  const { user, isLoading: authLoading } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // 認証チェック: 未認証の場合はランディングページにリダイレクト
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/landing");
+    }
+  }, [user, authLoading, router]);
+
+  const { items, calendars, dateLabel, isLoading, error, refresh } =
+    useSchedule();
+
+  // URLパラメータでrefresh=trueが指定されている場合、データを再取得
+  useEffect(() => {
+    const shouldRefresh = searchParams.get("refresh") === "true";
+    if (shouldRefresh) {
+      refresh();
+      // URLパラメータをクリア
+      router.replace("/");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    searchParams,
+    refresh, // URLパラメータをクリア
+    router.replace,
+  ]);
+
   const [viewDate, setViewDate] = useState(() => startOfDay(new Date()));
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCalendars, setSelectedCalendars] = useState<string[]>([]);
@@ -38,8 +69,8 @@ export default function Home() {
         return true;
       }
 
-      const calendarName = item.calendarName ?? "";
-      return calendarFilter.has(calendarName);
+      const calendarId = item.calendarId ?? "";
+      return calendarFilter.has(calendarId);
     });
   }, [items, searchTerm, selectedCalendars]);
 
@@ -65,7 +96,10 @@ export default function Home() {
   }, [filteredItems]);
 
   const calendarOptions = useMemo(() => {
-    return Array.from(new Set(calendars.map((calendar) => calendar.name)));
+    return calendars.map((calendar) => ({
+      label: calendar.name,
+      value: calendar.id,
+    }));
   }, [calendars]);
 
   const boardHeader = useMemo(
@@ -80,6 +114,60 @@ export default function Home() {
     setViewDate(startOfDay(next));
   };
 
+  // モーダル制御用の state
+  const [isConfirmOpen, setIsConfirmOpen] = React.useState(false);
+  const [pendingEmail, setPendingEmail] = React.useState<string | null>(null);
+  const [confirmSaveTrigger, setConfirmSaveTrigger] = useState(0);
+
+  // メール保存リクエストを受け取るハンドラ
+  const handleRequestEmailSave = (newEmail: string) => {
+    setPendingEmail(newEmail);
+    setIsConfirmOpen(true);
+  };
+
+  // モーダルの「保存」ボタン押下時のハンドラ
+  const handleConfirm = () => {
+    // ここで実際の保存処理を実装
+    console.log("保存:", pendingEmail);
+
+    setConfirmSaveTrigger((prev) => prev + 1);
+    setIsConfirmOpen(false);
+    setPendingEmail(null);
+  };
+
+  // モーダルの「キャンセル」ボタン押下時のハンドラ
+  const handleCancel = () => {
+    setIsConfirmOpen(false);
+    setPendingEmail(null);
+  };
+
+  // 年数の抽出
+  const years = useMemo(() => {
+    return Array.from(
+      new Set(
+        items
+          .map((item) => {
+            if (!item.startsAt) return null;
+            const date = new Date(item.startsAt);
+            if (Number.isNaN(date.getTime())) return null;
+            return date.getFullYear();
+          })
+          .filter((year): year is number => year !== null),
+      ),
+    ).sort((a, b) => b - a);
+  }, [items]);
+
+  // 認証中またはリダイレクト中はローディング表示
+  if (authLoading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-muted/10">
       <header className="border-b border-border bg-card/80 backdrop-blur">
@@ -90,11 +178,19 @@ export default function Home() {
             calendarOptions={calendarOptions}
             selectedCalendars={selectedCalendars}
             onCalendarChange={setSelectedCalendars}
+            yearOptions={years}
           />
-          <Avatar className="ml-auto h-10 w-10 border">
-            <AvatarImage src="https://i.pravatar.cc/100?img=40" alt="User" />
-            <AvatarFallback>YO</AvatarFallback>
-          </Avatar>
+
+          {/* アカウントボタンの表示 */}
+          <div className="ml-auto h-10 w-10">
+            <AccountMenu
+              user={user}
+              isLoading={authLoading}
+              error={null}
+              onRequestEmailSave={handleRequestEmailSave}
+              confirmSaveTrigger={confirmSaveTrigger}
+            />
+          </div>
         </div>
       </header>
       <main className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 gap-3 overflow-hidden px-2 py-2 lg:grid-cols-[minmax(0,1fr)_clamp(24rem,32vw,32rem)] ">
@@ -117,7 +213,33 @@ export default function Home() {
           />
         </div>
       </main>
-      <AvatarStrip />
+      <SelectCalendarStrip
+        calendars={calendars}
+        onSelectCalendar={(cal) => {
+          console.log(`[navigate] 単体カレンダーページへ遷移: ${cal.name}`);
+          //ここに将来的に単体スケジュールページに遷移するロジックを実装する
+          //router.push(`/calendars/${cal.id}`);
+        }}
+        onAddCalendar={() => {
+          router.push("/calendars/new");
+        }}
+      />
+
+      {/* メールアドレス変更確認モーダル */}
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        message={`メールアドレスを「${pendingEmail}」に変更しますか？`}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
+
+      {/* メールアドレス変更確認モーダル */}
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        message={`メールアドレスを「${pendingEmail}」に変更しますか？`}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </div>
   );
 }
@@ -131,7 +253,7 @@ function BoardArea({
   onChangeViewDate,
 }: {
   className?: string;
-  items: ReturnType<typeof useTodaySchedule>["items"];
+  items: ReturnType<typeof useSchedule>["items"];
   isLoading: boolean;
   error: Error | null;
   viewDate: Date;
@@ -141,6 +263,9 @@ function BoardArea({
     useState<GeneralScheduleBoardItem | null>(null);
 
   const boardItems = useMemo(() => {
+    const viewYear = viewDate.getFullYear();
+    const viewMonth = viewDate.getMonth();
+
     return items
       .map((item) => {
         if (!item.startsAt) {
@@ -152,35 +277,26 @@ function BoardArea({
           return null;
         }
 
-        const adjustedStart = new Date(viewDate);
-        adjustedStart.setDate(originalStart.getDate());
-        adjustedStart.setHours(
-          originalStart.getHours(),
-          originalStart.getMinutes(),
-          originalStart.getSeconds(),
-          originalStart.getMilliseconds(),
-        );
+        if (
+          originalStart.getFullYear() !== viewYear ||
+          originalStart.getMonth() !== viewMonth
+        ) {
+          return null;
+        }
 
-        let adjustedEnd: Date | undefined;
+        let normalizedEnd: string | undefined;
         if (item.endsAt) {
           const originalEnd = new Date(item.endsAt);
           if (!Number.isNaN(originalEnd.getTime())) {
-            adjustedEnd = new Date(viewDate);
-            adjustedEnd.setDate(originalEnd.getDate());
-            adjustedEnd.setHours(
-              originalEnd.getHours(),
-              originalEnd.getMinutes(),
-              originalEnd.getSeconds(),
-              originalEnd.getMilliseconds(),
-            );
+            normalizedEnd = originalEnd.toISOString();
           }
         }
 
         return {
           id: item.id,
           title: item.title,
-          start: adjustedStart.toISOString(),
-          end: adjustedEnd?.toISOString(),
+          start: originalStart.toISOString(),
+          end: normalizedEnd,
           memo: item.memo,
           location: item.location,
           locationUrl: item.locationUrl,
@@ -266,26 +382,11 @@ function BoardArea({
   );
 }
 
-function AvatarStrip() {
+export default function Home() {
   return (
-    <div className="mx-auto w-full max-w-7xl shrink-0 px-3 py-2 lg:px-6">
-      <div className="flex gap-2.5 overflow-x-auto pb-1 lg:grid lg:grid-cols-5 lg:gap-2.5 lg:overflow-visible lg:pb-0">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Card
-            key={`avatar-${index}`}
-            className="flex min-w-[110px] items-center justify-center bg-slate-800/80 py-3.5 lg:min-w-0"
-          >
-            <Avatar className="h-16 w-16 border-4 border-primary">
-              <AvatarImage
-                src={`https://i.pravatar.cc/100?img=${30 + index}`}
-                alt={`Member ${index + 1}`}
-              />
-              <AvatarFallback>{`M${index + 1}`}</AvatarFallback>
-            </Avatar>
-          </Card>
-        ))}
-      </div>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
 

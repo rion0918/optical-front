@@ -1,35 +1,106 @@
 export const scheduleMock = {
-  date: "2024-04-12",
   calendars: [
     {
       id: "company",
       name: "全社カレンダー",
       color: "#0ea5e9",
-      description: "全社向けの共有イベントやお知らせを記録します。",
+      userId: "user-1", // John Doe's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "development",
       name: "開発チームカレンダー",
       color: "#22c55e",
-      description: "開発チームの会議やリリース関連の予定です。",
+      userId: "user-1", // John Doe's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
     },
     {
       id: "design",
       name: "デザインチームカレンダー",
       color: "#f97316",
-      description: "デザインレビューやユーザーテストを管理します。",
+      userId: "user-2", // Jane Smith's calendar
     },
     {
       id: "sales",
       name: "セールスカレンダー",
       color: "#a855f7",
-      description: "商談や顧客フォローアップの予定です。",
+      userId: "user-2", // Jane Smith's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80",
+    },
+    // ここからスクロール挙動確認のための追加カレンダー
+    {
+      id: "hr",
+      name: "人事カレンダー",
+      color: "#ef4444",
+      userId: "user-3", // Admin User's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      id: "pr",
+      name: "広報カレンダー",
+      color: "#10b981",
+      userId: "user-1", // John Doe's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      id: "marketing",
+      name: "マーケカレンダー",
+      color: "#f59e0b",
+      userId: "user-2", // Jane Smith's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      id: "support",
+      name: "サポートカレンダー",
+      color: "#3b82f6",
+      userId: "user-1", // John Doe's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      id: "backoffice",
+      name: "バックオフィス",
+      color: "#8b5cf6",
+      userId: "user-3", // Admin User's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      id: "infra",
+      name: "インフラチーム",
+      color: "#14b8a6",
+      userId: "user-1", // John Doe's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      id: "qa",
+      name: "QA カレンダー",
+      color: "#84cc16",
+      userId: "user-2", // Jane Smith's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      id: "product",
+      name: "プロダクトカレンダー",
+      color: "#06b6d4",
+      userId: "user-1", // John Doe's calendar
+      imageUrl:
+        "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80",
     },
   ],
   items: [
     {
       id: "company-standup",
       calendarId: "company",
+      userId: "user-1", // John Doe's schedule
       title: "全社会議",
       memo: "全社アップデートの共有",
       location: "オンライン",
@@ -44,12 +115,13 @@ export const scheduleMock = {
     {
       id: "company-townhall",
       calendarId: "company",
+      userId: "user-1", // John Doe's schedule
       title: "タウンホール準備",
       memo: "来週の全社会議資料チェック",
       location: "第1会議室",
       status: "default",
-      start: "2024-04-02T16:00:00+09:00",
-      end: "2024-04-02T17:00:00+09:00",
+      start: "2025-10-02T16:00:00+09:00",
+      end: "2025-10-02T17:00:00+09:00",
       members: ["総務チーム"],
       calendarName: "全社カレンダー",
       calendarColor: "#0ea5e9",
@@ -57,12 +129,13 @@ export const scheduleMock = {
     {
       id: "company-lunch",
       calendarId: "company",
+      userId: "user-1", // John Doe's schedule
       title: "ウェルカムランチ",
       memo: "新入社員との顔合わせ",
       location: "カフェテリア",
       status: "success",
-      start: "2024-04-04T12:00:00+09:00",
-      end: "2024-04-04T13:00:00+09:00",
+      start: "2025-10-04T00:00:00+09:00",
+      end: "2025-10-20T23:59:59+09:00",
       members: ["人事チーム"],
       calendarName: "全社カレンダー",
       calendarColor: "#0ea5e9",
@@ -70,6 +143,7 @@ export const scheduleMock = {
     {
       id: "dev-sprint-planning",
       calendarId: "development",
+      userId: "user-1", // John Doe's schedule
       title: "スプリント計画",
       memo: "バックログの優先度確認",
       location: "第2会議室",
@@ -83,12 +157,13 @@ export const scheduleMock = {
     {
       id: "dev-code-review",
       calendarId: "development",
+      userId: "user-1", // John Doe's schedule
       title: "コードレビュー会",
       memo: "新機能の最終確認",
       location: "オンライン",
       status: "warning",
-      start: "2024-04-02T13:00:00+09:00",
-      end: "2024-04-02T14:30:00+09:00",
+      start: "2025-10-02T13:00:00+09:00",
+      end: "2025-10-02T14:30:00+09:00",
       members: ["開発チーム"],
       calendarName: "開発チームカレンダー",
       calendarColor: "#22c55e",
@@ -96,6 +171,7 @@ export const scheduleMock = {
     {
       id: "dev-release-check",
       calendarId: "development",
+      userId: "user-1", // John Doe's schedule
       title: "リリース判定会議",
       memo: "デプロイ可否の最終判断",
       location: "第2会議室",
@@ -109,12 +185,13 @@ export const scheduleMock = {
     {
       id: "design-review",
       calendarId: "design",
+      userId: "user-2", // Jane Smith's schedule
       title: "UIレビュー",
       memo: "新ダッシュボードのモック確認",
       location: "デザイン室",
       status: "info",
-      start: "2024-04-01T14:30:00+09:00",
-      end: "2024-04-01T15:30:00+09:00",
+      start: "2025-10-19T14:30:00+09:00",
+      end: "2025-10-19T15:30:00+09:00",
       members: ["デザインチーム"],
       calendarName: "デザインチームカレンダー",
       calendarColor: "#f97316",
@@ -122,12 +199,13 @@ export const scheduleMock = {
     {
       id: "design-workshop",
       calendarId: "design",
+      userId: "user-2", // Jane Smith's schedule
       title: "デザインワークショップ",
       memo: "モバイルアプリの目標設定",
       location: "第3会議室",
       status: "success",
-      start: "2024-04-03T11:00:00+09:00",
-      end: "2024-04-03T12:30:00+09:00",
+      start: "2025-10-19T11:00:00+09:00",
+      end: "2025-10-19T12:30:00+09:00",
       members: ["デザイン部", "PM"],
       calendarName: "デザインチームカレンダー",
       calendarColor: "#f97316",
@@ -135,12 +213,13 @@ export const scheduleMock = {
     {
       id: "design-user-test",
       calendarId: "design",
+      userId: "user-2", // Jane Smith's schedule
       title: "ユーザーテスト",
       memo: "新規機能のヒアリング",
       location: "オンライン",
       status: "warning",
-      start: "2024-04-06T10:00:00+09:00",
-      end: "2024-04-06T11:30:00+09:00",
+      start: "2025-10-19T10:00:00+09:00",
+      end: "2025-10-19T11:30:00+09:00",
       members: ["東京 次郎", "ヒアリング参加者"],
       calendarName: "デザインチームカレンダー",
       calendarColor: "#f97316",
@@ -148,12 +227,13 @@ export const scheduleMock = {
     {
       id: "sales-pipeline",
       calendarId: "sales",
+      userId: "user-2", // Jane Smith's schedule
       title: "パイプライン確認",
       memo: "Q2見込みの整理",
       location: "オンライン",
       status: "info",
-      start: "2024-04-01T11:00:00+09:00",
-      end: "2024-04-01T12:00:00+09:00",
+      start: "2025-10-19T11:00:00+09:00",
+      end: "2025-10-19T12:00:00+09:00",
       members: ["セールスチーム"],
       calendarName: "セールスカレンダー",
       calendarColor: "#a855f7",
@@ -161,12 +241,13 @@ export const scheduleMock = {
     {
       id: "sales-demo",
       calendarId: "sales",
+      userId: "user-2", // Jane Smith's schedule
       title: "デモ商談",
       memo: "株式会社テスト様向け",
       location: "顧客先",
       status: "success",
-      start: "2024-04-04T15:00:00+09:00",
-      end: "2024-04-04T16:00:00+09:00",
+      start: "2025-10-19T15:00:00+09:00",
+      end: "2025-10-19T16:00:00+09:00",
       members: ["大阪 花子", "営業メンバー"],
       calendarName: "セールスカレンダー",
       calendarColor: "#a855f7",
@@ -174,15 +255,58 @@ export const scheduleMock = {
     {
       id: "sales-follow-up",
       calendarId: "sales",
+      userId: "user-2", // Jane Smith's schedule
       title: "フォローアップMTG",
       memo: "先週デモ顧客との進行確認",
       location: "オンライン",
       status: "default",
-      start: "2024-04-05T10:30:00+09:00",
-      end: "2024-04-05T11:00:00+09:00",
+      start: "2025-10-21T10:30:00+09:00",
+      end: "2025-10-21T11:00:00+09:00",
       members: ["セールス部", "CS"],
       calendarName: "セールスカレンダー",
       calendarColor: "#a855f7",
+    },
+    // 複数日にまたがる予定のテスト
+    {
+      id: "dev-sprint",
+      calendarId: "development",
+      userId: "user-1",
+      title: "スプリント2週間",
+      memo: "開発スプリント期間",
+      location: "オンライン",
+      status: "info",
+      start: "2025-10-06T00:00:00+09:00",
+      end: "2025-10-19T23:59:59+09:00",
+      members: ["開発チーム"],
+      calendarName: "開発チームカレンダー",
+      calendarColor: "#22c55e",
+    },
+    {
+      id: "company-vacation",
+      calendarId: "company",
+      userId: "user-1",
+      title: "年末年始休暇",
+      memo: "全社休業",
+      status: "default",
+      start: "2025-10-22T00:00:00+09:00",
+      end: "2025-10-26T23:59:59+09:00",
+      members: ["全社"],
+      calendarName: "全社カレンダー",
+      calendarColor: "#0ea5e9",
+    },
+    {
+      id: "design-conference",
+      calendarId: "design",
+      userId: "user-2",
+      title: "デザインカンファレンス",
+      memo: "海外出張",
+      location: "サンフランシスコ",
+      status: "warning",
+      start: "2025-10-13T00:00:00+09:00",
+      end: "2025-10-17T23:59:59+09:00",
+      members: ["デザインチーム"],
+      calendarName: "デザインチームカレンダー",
+      calendarColor: "#f97316",
     },
   ],
 } as const;

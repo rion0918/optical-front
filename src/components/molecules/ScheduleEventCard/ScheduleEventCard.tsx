@@ -4,7 +4,7 @@ import { StatusDot, type StatusDotVariant } from "@/components/atoms/StatusDot";
 import { Text } from "@/components/atoms/Text";
 import { cn } from "@/utils_constants_styles/utils";
 
-type ScheduleEventCardVariant = "compact" | "timeline";
+type ScheduleEventCardVariant = "compact" | "timeline" | "span";
 
 export type ScheduleEventCardProps = {
   title: string;
@@ -16,6 +16,9 @@ export type ScheduleEventCardProps = {
   indicatorClassName?: string;
   titleClassName?: string;
   subtitleClassName?: string;
+  isStart?: boolean;
+  isEnd?: boolean;
+  isMiddle?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const ScheduleEventCard = forwardRef<
@@ -33,32 +36,51 @@ export const ScheduleEventCard = forwardRef<
       indicatorClassName,
       titleClassName,
       subtitleClassName,
+      isStart = true,
+      isEnd = true,
+      isMiddle = false,
       ...props
     },
     ref,
   ) => {
     const isCompact = variant === "compact";
+    const isSpan = variant === "span";
+
+    // スパン表示の場合の角丸調整
+    const roundedClass = isSpan
+      ? cn(
+          isStart && isEnd && "rounded-sm",
+          isStart && !isEnd && "rounded-l-sm",
+          !isStart && isEnd && "rounded-r-sm",
+          !isStart && !isEnd && "rounded-none",
+        )
+      : "rounded-sm";
 
     return (
       <div
         ref={ref}
         className={cn(
           "flex w-full min-w-0 items-center gap-0.5",
-          isCompact
-            ? "rounded-sm border border-white/10 bg-white/[0.08] px-1.5 py-0.5 text-[10px] leading-tight text-white shadow-sm"
-            : "text-sm text-foreground",
+          isCompact &&
+            "border border-white/10 bg-white/[0.08] px-1 py-[1px] text-[9px] leading-tight text-white shadow-sm",
+          isSpan &&
+            "border-y border-white/10 bg-white/[0.08] px-1 py-[1px] text-[9px] leading-tight text-white shadow-sm",
+          !isCompact && !isSpan && "text-sm text-foreground",
+          roundedClass,
           className,
         )}
         {...props}
       >
-        {isCompact ? (
-          <span
-            className={cn(
-              "inline-flex h-1.5 w-1.5 shrink-0 rounded-full",
-              indicatorClassName,
-            )}
-            style={{ backgroundColor: calendarColor ?? "#38bdf8" }}
-          />
+        {isCompact || isSpan ? (
+          (isStart || !isSpan) && (
+            <span
+              className={cn(
+                "inline-flex h-1 w-1 shrink-0 rounded-full",
+                indicatorClassName,
+              )}
+              style={{ backgroundColor: calendarColor ?? "#38bdf8" }}
+            />
+          )
         ) : (
           <StatusDot
             variant={calendarColor ? "default" : statusVariant}
@@ -72,11 +94,11 @@ export const ScheduleEventCard = forwardRef<
         <div className="flex min-w-0 flex-col">
           <Text
             as="span"
-            weight={isCompact ? "normal" : "medium"}
+            weight={isCompact || isSpan ? "normal" : "medium"}
             className={cn(
               "block truncate",
-              isCompact
-                ? "text-[10px] leading-tight text-white"
+              isCompact || isSpan
+                ? "text-[9px] leading-[1.2] text-white"
                 : "text-foreground",
               titleClassName,
             )}
@@ -88,8 +110,8 @@ export const ScheduleEventCard = forwardRef<
               as="span"
               size="sm"
               className={cn(
-                "block truncate text-xs",
-                isCompact ? "text-white/70" : "text-muted-foreground",
+                "block truncate text-[8px] leading-tight",
+                isCompact || isSpan ? "text-white/70" : "text-muted-foreground",
                 subtitleClassName,
               )}
             >

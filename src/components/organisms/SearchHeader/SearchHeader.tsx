@@ -1,61 +1,24 @@
-import { SearchInput } from "@/components/molecules/SearchInput/SearchInput";
-import { MultiSelectDropdown } from "@/components/molecules/MultiSelectDropdown/MultiSelectDropdown";
-import { Button } from "@/components/atoms/Button";
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { Button } from "@/components/atoms/Button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/atoms/Dialog";
+import { MultiSelectDropdown } from "@/components/molecules/MultiSelectDropdown/MultiSelectDropdown";
+import { SearchInput } from "@/components/molecules/SearchInput/SearchInput";
 
-// 検索候補・フィルターのリスト(仮)
-const fallbackFilterData = [
-  {
-    title: "会議室A",
-    calendar: "仕事用",
-    year: 2023,
-    month: 4,
-  },
-  {
-    title: "会議室B",
-    calendar: "仕事用",
-    year: 2024,
-    month: 7,
-  },
-  {
-    title: "山田太郎の誕生日",
-    calendar: "学校",
-    year: 2025,
-    month: 1,
-  },
-  {
-    title: "佐藤花子とランチ",
-    calendar: "仕事用",
-    year: 2023,
-    month: 9,
-  },
-  {
-    title: "始業式",
-    calendar: "学校",
-    year: 2024,
-    month: 12,
-  },
-  {
-    title: "沖縄旅行",
-    calendar: "私用",
-    year: 2025,
-    month: 5,
-  },
-  {
-    title: "金沢出張",
-    calendar: "仕事用",
-    year: 2023,
-    month: 11,
-  },
-];
+type LabeledOption = { label: string; value: string };
 
 type SearchHeaderProps = {
   searchValue?: string;
   onSearchChange?: (value: string) => void;
-  calendarOptions?: string[];
+  calendarOptions?: Array<string | LabeledOption>;
   selectedCalendars?: string[];
   onCalendarChange?: (value: string[]) => void;
-  periodOptions?: string[];
+  yearOptions?: number[];
 };
 
 export function SearchHeader({
@@ -64,11 +27,12 @@ export function SearchHeader({
   calendarOptions,
   selectedCalendars,
   onCalendarChange,
-  periodOptions,
+  yearOptions,
 }: SearchHeaderProps) {
   const [search, setSearch] = useState(searchValue ?? ""); // 検索バーの入力値
   const [calendar, setCalendar] = useState<string[]>(selectedCalendars ?? []); // カレンダーフィルターの選択値
   const [period, setPeriod] = useState<string[]>([]); // 期間フィルターの選択値
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false); // プレビュー表示用ダイアログの開閉状態
 
   useEffect(() => {
     setSearch(searchValue ?? "");
@@ -79,20 +43,8 @@ export function SearchHeader({
   }, [selectedCalendars]);
 
   const availableCalendars = useMemo(() => {
-    if (calendarOptions && calendarOptions.length > 0) {
-      return Array.from(new Set(calendarOptions));
-    }
-    return Array.from(new Set(fallbackFilterData.map((item) => item.calendar)));
+    return calendarOptions ?? [];
   }, [calendarOptions]);
-
-  const availablePeriods = useMemo(() => {
-    if (periodOptions && periodOptions.length > 0) {
-      return Array.from(new Set(periodOptions));
-    }
-    return Array.from(
-      new Set(fallbackFilterData.map((item) => item.year.toString())),
-    );
-  }, [periodOptions]);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -115,7 +67,7 @@ export function SearchHeader({
     <div className="space-y-4">
       <div className="flex gap-2 items-center">
         {/* 検索バー */}
-        <div className="w-[600px]">
+        <div className="w-[500px]">
           <SearchInput
             value={search}
             onChange={handleSearchChange}
@@ -125,30 +77,54 @@ export function SearchHeader({
         </div>
 
         {/* カレンダーフィルター */}
-        <div className="w-[180px]">
+        <div className="w-[190px]">
           <MultiSelectDropdown
             options={availableCalendars}
-            placeholder="全てのカレンダー"
+            placeholder="カレンダーの指定"
             value={calendar}
             onChange={handleCalendarChange}
           />
         </div>
 
         {/* 期間フィルター */}
-        <div className="w-[100px]">
+        <div className="w-[120px]">
           <MultiSelectDropdown
-            options={availablePeriods}
-            placeholder="全期間"
+            options={(yearOptions ?? []).map((y) => y.toString())}
+            placeholder="年数の指定"
             value={period}
             onChange={setPeriod}
           />
         </div>
 
-        {/* クリアボタン */}
-        <Button variant="outline" onClick={handleClear}>
-          クリア
-        </Button>
+        <div className="ml-auto flex gap-15">
+          {/* クリアボタン */}
+          <Button variant="outline" onClick={handleClear}>
+            クリア
+          </Button>
+
+          {/* プレビューボタン */}
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={() => setIsPreviewOpen(true)}
+            aria-label="選択内容を表示"
+          >
+            <Image src="/optical.png" alt="OptiCal" width={24} height={24} />
+          </Button>
+        </div>
       </div>
+
+      {/* 選択内容プレビュー用ダイアログ */}
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="w-[60vw] h-[80vh] max-w-8xl">
+          <DialogHeader>
+            <DialogTitle>OptiCal</DialogTitle>
+          </DialogHeader>
+          <div className="text-sm text-muted-foreground">
+            選択したコンポーネントは今後ここに表示されます。
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

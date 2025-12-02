@@ -1,19 +1,21 @@
+import type { CheckedState } from "@radix-ui/react-checkbox";
+import { ChevronDown } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Button } from "@/components/atoms/Button";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
   DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuPortal,
+  DropdownMenuTrigger,
 } from "@/components/atoms/DropdownMenu";
-import { Button } from "@/components/atoms/Button";
-import { ScrollArea } from "@/components/atoms/ScrollArea";
-import type { CheckedState } from "@radix-ui/react-checkbox";
-import { useMemo, useState } from "react";
-import { ChevronDown } from "lucide-react";
+
+type Option = string | { label: string; value: string };
 
 interface MultiSelectDropdownProps {
-  options: string[];
+  options: Option[];
   placeholder?: string;
-  value: string[];
+  value: string[]; // store option.value
   onChange: (selected: string[]) => void;
 }
 
@@ -24,19 +26,28 @@ export function MultiSelectDropdown({
   onChange,
 }: MultiSelectDropdownProps) {
   const [open, setOpen] = useState(false);
-  const uniqueOptions = useMemo(() => Array.from(new Set(options)), [options]);
+  const normalized = useMemo(() => {
+    const arr = options.map((o) =>
+      typeof o === "string" ? { label: o, value: o } : o,
+    );
+    // de-duplicate by value while keeping first label
+    const map = new Map<string, { label: string; value: string }>();
+    for (const opt of arr) {
+      if (!map.has(opt.value)) map.set(opt.value, opt);
+    }
+    return Array.from(map.values());
+  }, [options]);
 
+  const labelByValue = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const opt of normalized) m.set(opt.value, opt.label);
+    return m;
+  }, [normalized]);
+
+  // ★ 3行分の高さ
   const MAX_VISIBLE_OPTIONS = 3;
   const ITEM_HEIGHT_PX = 40;
-  const shouldScroll = uniqueOptions.length > MAX_VISIBLE_OPTIONS;
-  const scrollAreaMaxHeight = shouldScroll
-    ? MAX_VISIBLE_OPTIONS * ITEM_HEIGHT_PX
-    : undefined;
-
-  // open/close 管理
-  const handleOpenChange = (isOpen: boolean) => {
-    setOpen(isOpen);
-  };
+  const scrollAreaMaxHeight = MAX_VISIBLE_OPTIONS * ITEM_HEIGHT_PX;
 
   // チェックボックスの選択管理
   const handleTempChange = (option: string, checked: CheckedState) => {
@@ -51,48 +62,51 @@ export function MultiSelectDropdown({
   };
 
   return (
-    <DropdownMenu open={open} onOpenChange={handleOpenChange}>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
           className="w-full flex items-center justify-between px-3"
+          disabled={normalized.length === 0}
         >
-          <span className="flex-1 min-w-0 truncate text-left">
+          <span className="flex-1 truncate text-left">
             {value.length === 0
               ? placeholder || "選択してください"
-              : value.join(", ")}
+              : value.map((v) => labelByValue.get(v) || v).join(", ")}
           </span>
+
           <ChevronDown
-            className={`ml-2 h-4 w-4 shrink-0 transition-transform ${
+            className={`ml-2 h-4 w-4 transition-transform ${
               open ? "rotate-180" : ""
             }`}
           />
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent sideOffset={4} className="p-0">
-        <ScrollArea
-          className="w-full"
-          style={
-            scrollAreaMaxHeight
-              ? { maxHeight: `${scrollAreaMaxHeight}px` }
-              : undefined
-          }
-        >
-          <div className="py-1">
-            {uniqueOptions.map((option) => (
-              <DropdownMenuCheckboxItem
-                key={option}
-                checked={value.includes(option)}
-                onCheckedChange={(checked) => handleTempChange(option, checked)}
-                onSelect={(e) => e.preventDefault()} // チェック後に閉じないように
-              >
-                {option}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </div>
-        </ScrollArea>
-      </DropdownMenuContent>
+      {/** optionsが0個のときは完全に反応しなくなる */}
+      {normalized.length > 0 && (
+        <DropdownMenuPortal>
+          <DropdownMenuContent sideOffset={4} className="p-0">
+            <div
+              className="overflow-y-auto"
+              style={{ maxHeight: scrollAreaMaxHeight }}
+            >
+              {normalized.map((option) => (
+                <DropdownMenuCheckboxItem
+                  key={option.value}
+                  checked={value.includes(option.value)}
+                  onCheckedChange={(checked) =>
+                    handleTempChange(option.value, checked)
+                  }
+                  onSelect={(e) => e.preventDefault()} // チェックで閉じない
+                >
+                  {option.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenuPortal>
+      )}
     </DropdownMenu>
   );
 }
