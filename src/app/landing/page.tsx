@@ -1,7 +1,7 @@
 import { LandingHeader } from "@/components/organisms/LandingHeader";
 import { LandingHero } from "@/components/organisms/LandingHero";
 import { LandingStepSection } from "@/components/organisms/LandingStepSection";
-import { LandingOptionSection} from "@/components/organisms/LandingOption";
+import { LandingTemplateSection } from "@/components/organisms/LandingTemplateSection";
 import { LandingFooter } from "@/components/organisms/LandingFooter";
 
 export default function LandingPage() {
@@ -13,8 +13,6 @@ export default function LandingPage() {
       {/* Heroセクション */}
       <LandingHero />
 
-      
-
       <main className="container mx-auto px-6 py-20 space-y-20">
         <section id="step" className="scroll-mt-20">
           {/* 利用ステップ */}
@@ -23,7 +21,7 @@ export default function LandingPage() {
 
         <section id="template" className="scroll-mt-20">
           {/* テンプレート */}
-          <LandingOptionSection />
+          <LandingTemplateSection />
         </section>
       </main>
 
