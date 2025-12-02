@@ -23,6 +23,17 @@ const LandingPage = () => {
   // ローディング中
   if (isLoading) {
     return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 未認証の場合のみランディングページを表示
+  if (!user) {
+    return (
       <div className="min-h-screen">
         {/* 固定ヘッダー */}
         <LandingHeader />
