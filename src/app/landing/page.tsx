@@ -1,11 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { LandingFooter } from "@/components/organisms/LandingFooter";
 import { LandingHeader } from "@/components/organisms/LandingHeader";
 import { LandingHero } from "@/components/organisms/LandingHero";
 import { LandingStepSection } from "@/components/organisms/LandingStepSection";
 import { LandingTemplateSection } from "@/components/organisms/LandingTemplateSection";
-import { LandingFooter } from "@/components/organisms/LandingFooter";
-import { useRouter } from "next/navigation";
 import { use, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
