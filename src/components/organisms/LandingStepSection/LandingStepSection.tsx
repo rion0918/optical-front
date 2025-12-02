@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Text } from "@/components/atoms/Text/Text";
 import { Button } from "@/components/atoms/Button";
+import { Text } from "@/components/atoms/Text/Text";
 import { StepCard } from "@/components/molecules/StepCard/StepCard";
 
 export const LandingStepSection = () => {

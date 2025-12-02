@@ -1,4 +1,3 @@
-import * as React from "react";
 import Link from "next/link";
 import { Text } from "@/components/atoms/Text/Text";
 
@@ -12,8 +11,10 @@ export const LandingFooter = () => {
             OptiCal
           </Text>
           <Text as="span" size="sm">
-            用途に合わせた<br />
-            スケジュール管理サービス<br />
+            用途に合わせた
+            <br />
+            スケジュール管理サービス
+            <br />
           </Text>
         </div>
 
@@ -23,13 +24,19 @@ export const LandingFooter = () => {
             サービス
           </Text>
           <Link href="" className="mb-2 hover:text-white transition-colors">
-            <Text as="span" size="sm">製品紹介</Text>
+            <Text as="span" size="sm">
+              製品紹介
+            </Text>
           </Link>
           <Link href="" className="mb-2 hover:text-white transition-colors">
-            <Text as="span" size="sm">Option紹介</Text>
+            <Text as="span" size="sm">
+              Option紹介
+            </Text>
           </Link>
           <Link href="" className="mb-2 hover:text-white transition-colors">
-            <Text as="span" size="sm">テンプレート紹介</Text>
+            <Text as="span" size="sm">
+              テンプレート紹介
+            </Text>
           </Link>
         </div>
 
@@ -39,10 +46,14 @@ export const LandingFooter = () => {
             ヘルプ
           </Text>
           <Link href="" className="mb-2 hover:text-white transition-colors">
-            <Text as="span" size="sm">よくある質問</Text>
+            <Text as="span" size="sm">
+              よくある質問
+            </Text>
           </Link>
           <Link href="" className="mb-2 hover:text-white transition-colors">
-            <Text as="span" size="sm">お問い合わせ</Text>
+            <Text as="span" size="sm">
+              お問い合わせ
+            </Text>
           </Link>
         </div>
 
@@ -50,21 +61,25 @@ export const LandingFooter = () => {
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <Text as="h4" size="md" weight="bold" className="mb-4 text-white">
             法的情報
-        </Text>
-        <Link href="" className="mb-2 hover:text-white transition-colors">
-          <Text as="span" size="sm">利用規約</Text>
-        </Link>
-        <Link href="" className="mb-2 hover:text-white transition-colors">
-          <Text as="span" size="sm">プライバシーポリシー</Text>
-        </Link>
+          </Text>
+          <Link href="" className="mb-2 hover:text-white transition-colors">
+            <Text as="span" size="sm">
+              利用規約
+            </Text>
+          </Link>
+          <Link href="" className="mb-2 hover:text-white transition-colors">
+            <Text as="span" size="sm">
+              プライバシーポリシー
+            </Text>
+          </Link>
+        </div>
       </div>
-    </div>
 
       <div className="max-w-4xl mx-auto pt-8 text-center">
-      <Text as="p" size="sm" className="text-gray-500">
-        &copy; 2025 OptiCal. All rights reserved.
-      </Text>
-    </div>
+        <Text as="p" size="sm" className="text-gray-500">
+          &copy; 2025 OptiCal. All rights reserved.
+        </Text>
+      </div>
     </footer>
   );
 };

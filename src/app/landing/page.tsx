@@ -1,13 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { LandingFooter } from "@/components/organisms/LandingFooter";
 import { LandingHeader } from "@/components/organisms/LandingHeader";
 import { LandingHero } from "@/components/organisms/LandingHero";
 import { LandingStepSection } from "@/components/organisms/LandingStepSection";
 import { LandingTemplateSection } from "@/components/organisms/LandingTemplateSection";
-import { LandingFooter } from "@/components/organisms/LandingFooter";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
-import { use, useEffect } from "react";
 
 const LandingPage = () => {
   const { user, isLoading } = useAuth();

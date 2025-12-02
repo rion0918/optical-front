@@ -2,10 +2,10 @@
 "use client";
 
 import Link from "next/link";
+import { Button } from "@/components/atoms/Button";
 import { Card } from "@/components/atoms/Card";
 import { Text } from "@/components/atoms/Text";
-import { Button } from "@/components/atoms/Button";
-import { type LandingTemplate } from "@/components/organisms/LandingTemplateSection/TemplateData";
+import type { LandingTemplate } from "@/components/organisms/LandingTemplateSection/TemplateData";
 
 type Props = {
   template: LandingTemplate;
@@ -39,8 +39,8 @@ export const LandingTemplateCard = ({ template, onClick }: Props) => {
 
         {/* 箇条書きオプション */}
         <div className="text-gray-900 leading-relaxed">
-          {template.options?.map((opt, index) => (
-            <p key={index}>・{opt}</p>
+          {template.options?.map((opt) => (
+            <p key={opt}>・{opt}</p>
           ))}
         </div>
         {/* 始めるボタン */}

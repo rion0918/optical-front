@@ -2,12 +2,12 @@
 "use client";
 
 import { useState } from "react";
-import { LandingTemplateCard } from "@/components/molecules/LandingTemplateCard";
 import { Text } from "@/components/atoms/Text";
-import { templateData, type LandingTemplate } from "./TemplateData";
+import { LandingTemplateCard } from "@/components/molecules/LandingTemplateCard";
+import { type LandingTemplate, templateData } from "./TemplateData";
 
 export const LandingTemplateSection = () => {
-  const [selectedTemplate, setSelectedTemplate] =
+  const [_selectedTemplate, setSelectedTemplate] =
     useState<LandingTemplate | null>(null);
 
   const handleCardClick = (id: string) => {
