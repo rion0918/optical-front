@@ -1,17 +1,15 @@
 // src/components/molecules/LandingTemplateCard/LandingTemplateCard.stories.tsx
 
-import { action } from "@storybook/addon-actions";
+import { fn } from "@storybook/test";
 import type { Meta, StoryObj } from "@storybook/react";
-import { templateData } from "@/components/organisms/LandingTemplateSection/TemplateData";
+import { templateData } from "../../organisms/LandingTemplateSection/TemplateData";
 import { LandingTemplateCard } from "./LandingTemplateCard";
 
 const meta: Meta<typeof LandingTemplateCard> = {
   title: "Molecules/LandingTemplateCard",
   component: LandingTemplateCard,
   tags: ["autodocs"],
-  args: {
-    onClick: action("card-click"),
-  },
+  args: { onClick: fn() },
 };
 
 export default meta;
