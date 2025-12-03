@@ -1,0 +1,17 @@
+{
+  "github.copilot.advanced": {
+    "debug.overrideChatSystemPrompt": "You are a code reviewer for calendar-front. Output all review comments in Japanese. Reference .github/copilot-instructions.md for guidelines."
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
+}
