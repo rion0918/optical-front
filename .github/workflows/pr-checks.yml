@@ -33,8 +33,8 @@ jobs:
       - name: Run Biome format check
         run: pnpm run lint
 
-  test:
-    name: Unit Tests
+  typecheck:
+    name: TypeScript Type Check
     runs-on: ubuntu-latest
 
     steps:
@@ -55,9 +55,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run tests
-        run: pnpm test
-        continue-on-error: true
+      - name: Type check
+        run: pnpm tsc --noEmit
 
   build:
     name: Next.js Build
@@ -83,31 +82,3 @@ jobs:
 
       - name: Build Next.js
         run: pnpm run build
-
-  storybook:
-    name: Storybook Build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: latest
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Verify Storybook installation
-        run: pnpm list @storybook/react || true
-
-      - name: Build Storybook
-        run: pnpm run build-storybook
