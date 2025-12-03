@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { LandingFooter } from "@/components/organisms/LandingFooter";
 import { LandingHeader } from "@/components/organisms/LandingHeader";
 import { LandingHero } from "@/components/organisms/LandingHero";
 import { LandingStepSection } from "@/components/organisms/LandingStepSection";
 import { LandingTemplateSection } from "@/components/organisms/LandingTemplateSection";
-import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
 const LandingPage = () => {
@@ -41,17 +41,17 @@ const LandingPage = () => {
         {/* Heroセクション */}
         <LandingHero />
 
-      <main className="container mx-auto px-6 py-20 space-y-20">
-        <section id="step" className="scroll-mt-20">
-          {/* 利用ステップ */}
-          <LandingStepSection />
-        </section>
+        <main className="container mx-auto px-6 py-20 space-y-20">
+          <section id="step" className="scroll-mt-20">
+            {/* 利用ステップ */}
+            <LandingStepSection />
+          </section>
 
-        <section id="template" className="scroll-mt-20">
-          {/* テンプレート */}
-          <LandingTemplateSection />
-        </section>
-      </main>
+          <section id="template" className="scroll-mt-20">
+            {/* テンプレート */}
+            <LandingTemplateSection />
+          </section>
+        </main>
 
         {/*フッター */}
         <div className="mt-20">
