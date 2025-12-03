@@ -4,17 +4,11 @@ import { Bell, ExternalLink, Flame } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Badge } from "@/components/atoms/Badge";
+import type {
+  GitHubPullRequest,
+  PullRequestReviewOptionProps,
+} from "@/types/github";
 import { cn } from "@/utils_constants_styles/utils";
-import type { PullRequestInfo } from "./types";
-
-export type PullRequestReviewOptionProps = {
-  /** レビュー待ちの PR 一覧 */
-  pullRequests: PullRequestInfo[];
-  /** GitHub リポジトリの PR 一覧へのリンク（フッター用） */
-  allPrsUrl?: string;
-  /** カスタム className */
-  className?: string;
-};
 
 /**
  * GitHub PR レビュー待ち件数を表示するオプションウィジェット
@@ -83,15 +77,6 @@ export function PullRequestReviewOption({
     },
     [updateOverflowStates],
   );
-
-  /**
-   * PR 番号を URL から抽出する
-   * URL 形式: https://github.com/owner/repo/pull/123
-   */
-  const extractPrNumber = (url: string): string => {
-    const match = url.match(/\/pull\/(\d+)/);
-    return match ? `#${match[1]}` : "";
-  };
 
   /**
    * マウント後と依存値変更時にオーバーフロー判定を実行
@@ -196,10 +181,13 @@ export function PullRequestReviewOption({
                     </div>
                     <div className="flex items-center gap-2 text-xs text-[#8b949e] mt-1">
                       <span className="text-[#2ea043] font-semibold">
-                        {extractPrNumber(pr.url)}
+                        #{pr.number}
                       </span>
                       <span>
-                        by <span className="text-[#79c0ff]">@{pr.author}</span>
+                        by{" "}
+                        <span className="text-[#79c0ff]">
+                          @{pr.author.username}
+                        </span>
                       </span>
                     </div>
                   </div>

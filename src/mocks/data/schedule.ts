@@ -1,7 +1,7 @@
 // 指定月のモックアイテムを生成する関数
 function generateMonthlyItems(year: number, month: number) {
   const monthStr = String(month).padStart(2, "0");
-  const offset = (Math.random() * 10) | 0; // 月ごとにランダムなオフセット
+  const _offset = (Math.random() * 10) | 0; // 月ごとにランダムなオフセット
 
   return [
     // 全社カレンダー
