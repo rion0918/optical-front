@@ -13,13 +13,15 @@ async function initializeWorker() {
   const { setupWorker } = await import("msw/browser");
   const { scheduleHandlers } = await import("@/mocks/handlers");
   const { authHandlers } = await import("@/mocks/handlers/authHandlers");
+  const { githubHandlers } = await import("@/mocks/handlers/githubHandlers");
 
   console.log("[MSW] Setting up handlers:", {
     scheduleHandlers: scheduleHandlers.length,
     authHandlers: authHandlers.length,
+    githubHandlers: githubHandlers.length,
   });
 
-  return setupWorker(...scheduleHandlers, ...authHandlers);
+  return setupWorker(...scheduleHandlers, ...authHandlers, ...githubHandlers);
 }
 
 export function startMockServiceWorker() {

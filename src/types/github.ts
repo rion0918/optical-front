@@ -1,5 +1,6 @@
 /**
  * GitHub API 関連の共通型定義
+ * バックエンドとフロントエンドで「データの形」を共有するための契約書
  *
  * バックエンドから返される GitHub データの型を定義します。
  * PullRequestReviewOption と TeamReviewLoadOption の両方で使用される共通型です。

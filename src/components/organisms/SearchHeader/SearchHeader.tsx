@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import {
   Dialog,
@@ -11,12 +11,12 @@ import { MultiSelectDropdown } from "@/components/molecules/MultiSelectDropdown/
 import { SearchInput } from "@/components/molecules/SearchInput/SearchInput";
 import { PullRequestReviewOption } from "@/components/organisms/EngineerOption/PullRequestReviewOption";
 import { TeamReviewLoadOption } from "@/components/organisms/EngineerOption/TeamReviewLoadOption";
-import {
-  mockAllPrsUrl,
-  mockPullRequests,
-  mockTeamMembers,
-} from "@/mocks/data/github";
-import type { ChangeReviewerRequest } from "@/types/github";
+import type {
+  ChangeReviewerRequest,
+  GitHubPullRequest,
+  GitHubReviewOptionsResponse,
+  TeamMemberReviewLoad,
+} from "@/types/github";
 
 type LabeledOption = { label: string; value: string };
 
@@ -41,6 +41,38 @@ export function SearchHeader({
   const [calendar, setCalendar] = useState<string[]>(selectedCalendars ?? []); // カレンダーフィルターの選択値
   const [period, setPeriod] = useState<string[]>([]); // 期間フィルターの選択値
   const [isPreviewOpen, setIsPreviewOpen] = useState(false); // プレビュー表示用ダイアログの開閉状態
+
+  // GitHub レビューオプションの状態
+  const [pullRequests, setPullRequests] = useState<GitHubPullRequest[]>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMemberReviewLoad[]>([]);
+  const [allPrsUrl, setAllPrsUrl] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // GitHub レビューオプションを取得
+  const fetchGitHubReviewOptions = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/github/review-options");
+      if (!response.ok) {
+        throw new Error("Failed to fetch GitHub review options");
+      }
+      const data: GitHubReviewOptionsResponse = await response.json();
+      setPullRequests(data.myPendingReviews);
+      setTeamMembers(data.teamReviewLoads);
+      setAllPrsUrl(data.allPullRequestsUrl);
+    } catch (error) {
+      console.error("Error fetching GitHub review options:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // ダイアログが開かれたときにデータを取得
+  useEffect(() => {
+    if (isPreviewOpen) {
+      fetchGitHubReviewOptions();
+    }
+  }, [isPreviewOpen, fetchGitHubReviewOptions]);
 
   useEffect(() => {
     setSearch(searchValue ?? "");
@@ -129,27 +161,33 @@ export function SearchHeader({
             <DialogTitle>OptiCal</DialogTitle>
           </DialogHeader>
           <div className="flex flex-row gap-6 p-4 w-full h-full">
-            {/* PRレビュー待ち件数オプション */}
-            <div className="flex-1 min-w-0 overflow-auto">
-              <h3 className="text-lg font-semibold mb-4">PR レビュー待ち</h3>
-              <PullRequestReviewOption
-                pullRequests={mockPullRequests}
-                allPrsUrl={mockAllPrsUrl}
-              />
-            </div>
-            {/* チームレビュー負荷オプション */}
-            <div className="flex-1 min-w-0 overflow-auto">
-              <h3 className="text-lg font-semibold mb-4">チームレビュー負荷</h3>
-              <TeamReviewLoadOption
-                members={mockTeamMembers}
-                onReviewerChange={(payload: ChangeReviewerRequest) =>
-                  console.log(
-                    "Reviewer change requested:",
-                    JSON.stringify(payload, null, 2),
-                  )
-                }
-              />
-            </div>
+            {isLoading ? (
+              <div className="flex items-center justify-center w-full">
+                <p className="text-muted-foreground">読み込み中...</p>
+              </div>
+            ) : (
+              <>
+                {/* PRレビュー待ち件数オプション */}
+                <div className="flex-1 min-w-0 overflow-auto">
+                  <PullRequestReviewOption
+                    pullRequests={pullRequests}
+                    allPrsUrl={allPrsUrl}
+                  />
+                </div>
+                {/* チームレビュー負荷オプション */}
+                <div className="flex-1 min-w-0 overflow-auto">
+                  <TeamReviewLoadOption
+                    members={teamMembers}
+                    onReviewerChange={(payload: ChangeReviewerRequest) =>
+                      console.log(
+                        "Reviewer change requested:",
+                        JSON.stringify(payload, null, 2),
+                      )
+                    }
+                  />
+                </div>
+              </>
+            )}
           </div>
         </DialogContent>
       </Dialog>
