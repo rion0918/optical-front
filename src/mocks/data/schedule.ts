@@ -1,312 +1,637 @@
-export const scheduleMock = {
-  calendars: [
+// 指定月のモックアイテムを生成する関数
+function generateMonthlyItems(year: number, month: number) {
+  const monthStr = String(month).padStart(2, "0");
+  const offset = (Math.random() * 10) | 0; // 月ごとにランダムなオフセット
+
+  return [
+    // 全社カレンダー
     {
-      id: "company",
-      name: "全社カレンダー",
-      color: "#0ea5e9",
-      userId: "user-1", // John Doe's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
-    },
-    {
-      id: "development",
-      name: "開発チームカレンダー",
-      color: "#22c55e",
-      userId: "user-1", // John Doe's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
-    },
-    {
-      id: "design",
-      name: "デザインチームカレンダー",
-      color: "#f97316",
-      userId: "user-2", // Jane Smith's calendar
-    },
-    {
-      id: "sales",
-      name: "セールスカレンダー",
-      color: "#a855f7",
-      userId: "user-2", // Jane Smith's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80",
-    },
-    // ここからスクロール挙動確認のための追加カレンダー
-    {
-      id: "hr",
-      name: "人事カレンダー",
-      color: "#ef4444",
-      userId: "user-3", // Admin User's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
-    },
-    {
-      id: "pr",
-      name: "広報カレンダー",
-      color: "#10b981",
-      userId: "user-1", // John Doe's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
-    },
-    {
-      id: "marketing",
-      name: "マーケカレンダー",
-      color: "#f59e0b",
-      userId: "user-2", // Jane Smith's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
-    },
-    {
-      id: "support",
-      name: "サポートカレンダー",
-      color: "#3b82f6",
-      userId: "user-1", // John Doe's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
-    },
-    {
-      id: "backoffice",
-      name: "バックオフィス",
-      color: "#8b5cf6",
-      userId: "user-3", // Admin User's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
-    },
-    {
-      id: "infra",
-      name: "インフラチーム",
-      color: "#14b8a6",
-      userId: "user-1", // John Doe's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
-    },
-    {
-      id: "qa",
-      name: "QA カレンダー",
-      color: "#84cc16",
-      userId: "user-2", // Jane Smith's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80",
-    },
-    {
-      id: "product",
-      name: "プロダクトカレンダー",
-      color: "#06b6d4",
-      userId: "user-1", // John Doe's calendar
-      imageUrl:
-        "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80",
-    },
-  ],
-  items: [
-    {
-      id: "company-standup",
+      id: `company-standup-${year}-${monthStr}`,
       calendarId: "company",
-      userId: "user-1", // John Doe's schedule
+      userId: "user-1",
       title: "全社会議",
       memo: "全社アップデートの共有",
       location: "オンライン",
       locationUrl: "https://meet.example.com/all-hands",
-      status: "info",
-      start: "2024-04-01T09:00:00+09:00",
-      end: "2024-04-01T09:45:00+09:00",
+      status: "info" as const,
+      start: `${year}-${monthStr}-01T09:00:00+09:00`,
+      end: `${year}-${monthStr}-01T09:45:00+09:00`,
       members: ["神戸 太郎", "大阪 花子", "東京 次郎"],
       calendarName: "全社カレンダー",
       calendarColor: "#0ea5e9",
     },
     {
-      id: "company-townhall",
+      id: `company-townhall-${year}-${monthStr}`,
       calendarId: "company",
-      userId: "user-1", // John Doe's schedule
+      userId: "user-1",
       title: "タウンホール準備",
-      memo: "来週の全社会議資料チェック",
+      memo: "来月の全社会議資料チェック",
       location: "第1会議室",
-      status: "default",
-      start: "2025-10-02T16:00:00+09:00",
-      end: "2025-10-02T17:00:00+09:00",
+      status: "default" as const,
+      start: `${year}-${monthStr}-02T16:00:00+09:00`,
+      end: `${year}-${monthStr}-02T17:00:00+09:00`,
       members: ["総務チーム"],
       calendarName: "全社カレンダー",
       calendarColor: "#0ea5e9",
     },
     {
-      id: "company-lunch",
+      id: `company-retreat-${year}-${monthStr}`,
       calendarId: "company",
-      userId: "user-1", // John Doe's schedule
-      title: "ウェルカムランチ",
-      memo: "新入社員との顔合わせ",
-      location: "カフェテリア",
-      status: "success",
-      start: "2025-10-04T00:00:00+09:00",
-      end: "2025-10-20T23:59:59+09:00",
-      members: ["人事チーム"],
+      userId: "user-1",
+      title: "部門ワークショップ",
+      memo: "年次戦略会議",
+      location: "第2会議室",
+      status: "success" as const,
+      start: `${year}-${monthStr}-15T10:00:00+09:00`,
+      end: `${year}-${monthStr}-15T12:00:00+09:00`,
+      members: ["全部門リーダー"],
       calendarName: "全社カレンダー",
       calendarColor: "#0ea5e9",
     },
     {
-      id: "dev-sprint-planning",
+      id: `company-celebration-${year}-${monthStr}`,
+      calendarId: "company",
+      userId: "user-1",
+      title: "記念式典",
+      memo: "創立記念イベント",
+      location: "カフェテリア",
+      status: "success" as const,
+      start: `${year}-${monthStr}-20T00:00:00+09:00`,
+      end: `${year}-${monthStr}-20T23:59:59+09:00`,
+      members: ["全社"],
+      calendarName: "全社カレンダー",
+      calendarColor: "#0ea5e9",
+    },
+
+    // 開発チームカレンダー
+    {
+      id: `dev-sprint-planning-${year}-${monthStr}`,
       calendarId: "development",
-      userId: "user-1", // John Doe's schedule
+      userId: "user-1",
       title: "スプリント計画",
       memo: "バックログの優先度確認",
       location: "第2会議室",
-      status: "success",
-      start: "2024-04-01T10:30:00+09:00",
-      end: "2024-04-01T12:00:00+09:00",
+      status: "success" as const,
+      start: `${year}-${monthStr}-01T10:30:00+09:00`,
+      end: `${year}-${monthStr}-01T12:00:00+09:00`,
       members: ["神戸 太郎", "大阪 花子", "福岡 悠"],
       calendarName: "開発チームカレンダー",
       calendarColor: "#22c55e",
     },
     {
-      id: "dev-code-review",
+      id: `dev-code-review-${year}-${monthStr}`,
       calendarId: "development",
-      userId: "user-1", // John Doe's schedule
+      userId: "user-1",
       title: "コードレビュー会",
       memo: "新機能の最終確認",
       location: "オンライン",
-      status: "warning",
-      start: "2025-10-02T13:00:00+09:00",
-      end: "2025-10-02T14:30:00+09:00",
+      status: "warning" as const,
+      start: `${year}-${monthStr}-08T13:00:00+09:00`,
+      end: `${year}-${monthStr}-08T14:30:00+09:00`,
       members: ["開発チーム"],
       calendarName: "開発チームカレンダー",
       calendarColor: "#22c55e",
     },
     {
-      id: "dev-release-check",
+      id: `dev-release-check-${year}-${monthStr}`,
       calendarId: "development",
-      userId: "user-1", // John Doe's schedule
+      userId: "user-1",
       title: "リリース判定会議",
       memo: "デプロイ可否の最終判断",
       location: "第2会議室",
-      status: "danger",
-      start: "2024-04-05T15:30:00+09:00",
-      end: "2024-04-05T16:30:00+09:00",
+      status: "danger" as const,
+      start: `${year}-${monthStr}-15T15:30:00+09:00`,
+      end: `${year}-${monthStr}-15T16:30:00+09:00`,
       members: ["開発リーダー", "QA チーム"],
       calendarName: "開発チームカレンダー",
       calendarColor: "#22c55e",
     },
     {
-      id: "design-review",
+      id: `dev-testing-${year}-${monthStr}`,
+      calendarId: "development",
+      userId: "user-1",
+      title: "統合テスト",
+      memo: "本番環境テスト実施",
+      location: "テスト環境",
+      status: "info" as const,
+      start: `${year}-${monthStr}-10T09:00:00+09:00`,
+      end: `${year}-${monthStr}-10T11:30:00+09:00`,
+      members: ["QA チーム", "開発チーム"],
+      calendarName: "開発チームカレンダー",
+      calendarColor: "#22c55e",
+    },
+    {
+      id: `dev-sprint-retro-${year}-${monthStr}`,
+      calendarId: "development",
+      userId: "user-1",
+      title: "スプリント振り返り",
+      memo: "改善点の共有",
+      location: "オンライン",
+      status: "default" as const,
+      start: `${year}-${monthStr}-22T16:00:00+09:00`,
+      end: `${year}-${monthStr}-22T17:00:00+09:00`,
+      members: ["開発チーム"],
+      calendarName: "開発チームカレンダー",
+      calendarColor: "#22c55e",
+    },
+
+    // デザインチームカレンダー
+    {
+      id: `design-review-${year}-${monthStr}`,
       calendarId: "design",
-      userId: "user-2", // Jane Smith's schedule
+      userId: "user-2",
       title: "UIレビュー",
       memo: "新ダッシュボードのモック確認",
       location: "デザイン室",
-      status: "info",
-      start: "2025-10-19T14:30:00+09:00",
-      end: "2025-10-19T15:30:00+09:00",
+      status: "info" as const,
+      start: `${year}-${monthStr}-05T14:30:00+09:00`,
+      end: `${year}-${monthStr}-05T15:30:00+09:00`,
       members: ["デザインチーム"],
       calendarName: "デザインチームカレンダー",
       calendarColor: "#f97316",
     },
     {
-      id: "design-workshop",
+      id: `design-workshop-${year}-${monthStr}`,
       calendarId: "design",
-      userId: "user-2", // Jane Smith's schedule
+      userId: "user-2",
       title: "デザインワークショップ",
       memo: "モバイルアプリの目標設定",
       location: "第3会議室",
-      status: "success",
-      start: "2025-10-19T11:00:00+09:00",
-      end: "2025-10-19T12:30:00+09:00",
+      status: "success" as const,
+      start: `${year}-${monthStr}-12T11:00:00+09:00`,
+      end: `${year}-${monthStr}-12T12:30:00+09:00`,
       members: ["デザイン部", "PM"],
       calendarName: "デザインチームカレンダー",
       calendarColor: "#f97316",
     },
     {
-      id: "design-user-test",
+      id: `design-user-test-${year}-${monthStr}`,
       calendarId: "design",
-      userId: "user-2", // Jane Smith's schedule
+      userId: "user-2",
       title: "ユーザーテスト",
       memo: "新規機能のヒアリング",
       location: "オンライン",
-      status: "warning",
-      start: "2025-10-19T10:00:00+09:00",
-      end: "2025-10-19T11:30:00+09:00",
+      status: "warning" as const,
+      start: `${year}-${monthStr}-18T10:00:00+09:00`,
+      end: `${year}-${monthStr}-18T11:30:00+09:00`,
       members: ["東京 次郎", "ヒアリング参加者"],
       calendarName: "デザインチームカレンダー",
       calendarColor: "#f97316",
     },
     {
-      id: "sales-pipeline",
+      id: `design-prototype-${year}-${monthStr}`,
+      calendarId: "design",
+      userId: "user-2",
+      title: "プロトタイプ作成",
+      memo: "インタラクティブ仕様確認",
+      location: "デザイン室",
+      status: "success" as const,
+      start: `${year}-${monthStr}-25T13:00:00+09:00`,
+      end: `${year}-${monthStr}-25T15:00:00+09:00`,
+      members: ["デザイナー", "フロントエンド"],
+      calendarName: "デザインチームカレンダー",
+      calendarColor: "#f97316",
+    },
+
+    // セールスカレンダー
+    {
+      id: `sales-pipeline-${year}-${monthStr}`,
       calendarId: "sales",
-      userId: "user-2", // Jane Smith's schedule
+      userId: "user-2",
       title: "パイプライン確認",
-      memo: "Q2見込みの整理",
+      memo: "月次見込みの整理",
       location: "オンライン",
-      status: "info",
-      start: "2025-10-19T11:00:00+09:00",
-      end: "2025-10-19T12:00:00+09:00",
+      status: "info" as const,
+      start: `${year}-${monthStr}-03T11:00:00+09:00`,
+      end: `${year}-${monthStr}-03T12:00:00+09:00`,
       members: ["セールスチーム"],
       calendarName: "セールスカレンダー",
       calendarColor: "#a855f7",
     },
     {
-      id: "sales-demo",
+      id: `sales-demo-${year}-${monthStr}`,
       calendarId: "sales",
-      userId: "user-2", // Jane Smith's schedule
+      userId: "user-2",
       title: "デモ商談",
       memo: "株式会社テスト様向け",
       location: "顧客先",
-      status: "success",
-      start: "2025-10-19T15:00:00+09:00",
-      end: "2025-10-19T16:00:00+09:00",
+      status: "success" as const,
+      start: `${year}-${monthStr}-10T15:00:00+09:00`,
+      end: `${year}-${monthStr}-10T16:00:00+09:00`,
       members: ["大阪 花子", "営業メンバー"],
       calendarName: "セールスカレンダー",
       calendarColor: "#a855f7",
     },
     {
-      id: "sales-follow-up",
+      id: `sales-follow-up-${year}-${monthStr}`,
       calendarId: "sales",
-      userId: "user-2", // Jane Smith's schedule
+      userId: "user-2",
       title: "フォローアップMTG",
-      memo: "先週デモ顧客との進行確認",
+      memo: "先月デモ顧客との進行確認",
       location: "オンライン",
-      status: "default",
-      start: "2025-10-21T10:30:00+09:00",
-      end: "2025-10-21T11:00:00+09:00",
+      status: "default" as const,
+      start: `${year}-${monthStr}-17T10:30:00+09:00`,
+      end: `${year}-${monthStr}-17T11:00:00+09:00`,
       members: ["セールス部", "CS"],
       calendarName: "セールスカレンダー",
       calendarColor: "#a855f7",
     },
-    // 複数日にまたがる予定のテスト
     {
-      id: "dev-sprint",
-      calendarId: "development",
-      userId: "user-1",
-      title: "スプリント2週間",
-      memo: "開発スプリント期間",
-      location: "オンライン",
-      status: "info",
-      start: "2025-10-06T00:00:00+09:00",
-      end: "2025-10-19T23:59:59+09:00",
-      members: ["開発チーム"],
-      calendarName: "開発チームカレンダー",
-      calendarColor: "#22c55e",
-    },
-    {
-      id: "company-vacation",
-      calendarId: "company",
-      userId: "user-1",
-      title: "年末年始休暇",
-      memo: "全社休業",
-      status: "default",
-      start: "2025-10-22T00:00:00+09:00",
-      end: "2025-10-26T23:59:59+09:00",
-      members: ["全社"],
-      calendarName: "全社カレンダー",
-      calendarColor: "#0ea5e9",
-    },
-    {
-      id: "design-conference",
-      calendarId: "design",
+      id: `sales-training-${year}-${monthStr}`,
+      calendarId: "sales",
       userId: "user-2",
-      title: "デザインカンファレンス",
-      memo: "海外出張",
-      location: "サンフランシスコ",
-      status: "warning",
-      start: "2025-10-13T00:00:00+09:00",
-      end: "2025-10-17T23:59:59+09:00",
-      members: ["デザインチーム"],
-      calendarName: "デザインチームカレンダー",
-      calendarColor: "#f97316",
+      title: "営業研修",
+      memo: "新商品説明会",
+      location: "第4会議室",
+      status: "info" as const,
+      start: `${year}-${monthStr}-24T14:00:00+09:00`,
+      end: `${year}-${monthStr}-24T15:30:00+09:00`,
+      members: ["営業全員"],
+      calendarName: "セールスカレンダー",
+      calendarColor: "#a855f7",
     },
-  ],
+
+    // HR カレンダー
+    {
+      id: `hr-recruitment-${year}-${monthStr}`,
+      calendarId: "hr",
+      userId: "user-3",
+      title: "採用面接",
+      memo: "新卒採用選考",
+      location: "第1会議室",
+      status: "default" as const,
+      start: `${year}-${monthStr}-06T10:00:00+09:00`,
+      end: `${year}-${monthStr}-06T11:00:00+09:00`,
+      members: ["採用チーム"],
+      calendarName: "人事カレンダー",
+      calendarColor: "#ef4444",
+    },
+    {
+      id: `hr-training-${year}-${monthStr}`,
+      calendarId: "hr",
+      userId: "user-3",
+      title: "研修プログラム",
+      memo: "スキル向上研修",
+      location: "セミナー室",
+      status: "info" as const,
+      start: `${year}-${monthStr}-14T09:00:00+09:00`,
+      end: `${year}-${monthStr}-14T17:00:00+09:00`,
+      members: ["全部門"],
+      calendarName: "人事カレンダー",
+      calendarColor: "#ef4444",
+    },
+    {
+      id: `hr-review-${year}-${monthStr}`,
+      calendarId: "hr",
+      userId: "user-3",
+      title: "人事評価面談",
+      memo: "半期評価の面談",
+      location: "各個室",
+      status: "warning" as const,
+      start: `${year}-${monthStr}-21T13:00:00+09:00`,
+      end: `${year}-${monthStr}-21T16:00:00+09:00`,
+      members: ["全社員", "管理職"],
+      calendarName: "人事カレンダー",
+      calendarColor: "#ef4444",
+    },
+
+    // マーケティングカレンダー
+    {
+      id: `marketing-campaign-${year}-${monthStr}`,
+      calendarId: "marketing",
+      userId: "user-2",
+      title: "キャンペーン企画会",
+      memo: "新商品発表キャンペーン",
+      location: "マーケ室",
+      status: "success" as const,
+      start: `${year}-${monthStr}-04T10:00:00+09:00`,
+      end: `${year}-${monthStr}-04T12:00:00+09:00`,
+      members: ["マーケティング部"],
+      calendarName: "マーケカレンダー",
+      calendarColor: "#f59e0b",
+    },
+    {
+      id: `marketing-analytics-${year}-${monthStr}`,
+      calendarId: "marketing",
+      userId: "user-2",
+      title: "データ分析レポート",
+      memo: "月次分析結果報告",
+      location: "オンライン",
+      status: "info" as const,
+      start: `${year}-${monthStr}-11T14:00:00+09:00`,
+      end: `${year}-${monthStr}-11T15:30:00+09:00`,
+      members: ["アナリスト", "管理層"],
+      calendarName: "マーケカレンダー",
+      calendarColor: "#f59e0b",
+    },
+    {
+      id: `marketing-social-${year}-${monthStr}`,
+      calendarId: "marketing",
+      userId: "user-2",
+      title: "SNS企画会議",
+      memo: "ソーシャルメディア戦略",
+      location: "マーケ室",
+      status: "default" as const,
+      start: `${year}-${monthStr}-19T11:00:00+09:00`,
+      end: `${year}-${monthStr}-19T12:00:00+09:00`,
+      members: ["SNS担当", "クリエイター"],
+      calendarName: "マーケカレンダー",
+      calendarColor: "#f59e0b",
+    },
+
+    // QA カレンダー
+    {
+      id: `qa-test-planning-${year}-${monthStr}`,
+      calendarId: "qa",
+      userId: "user-2",
+      title: "テスト計画会議",
+      memo: "月次テスト計画策定",
+      location: "QA室",
+      status: "default" as const,
+      start: `${year}-${monthStr}-02T10:00:00+09:00`,
+      end: `${year}-${monthStr}-02T11:00:00+09:00`,
+      members: ["QA チーム"],
+      calendarName: "QA カレンダー",
+      calendarColor: "#84cc16",
+    },
+    {
+      id: `qa-regression-${year}-${monthStr}`,
+      calendarId: "qa",
+      userId: "user-2",
+      title: "回帰テスト",
+      memo: "全機能確認テスト",
+      location: "テスト環境",
+      status: "warning" as const,
+      start: `${year}-${monthStr}-09T09:00:00+09:00`,
+      end: `${year}-${monthStr}-09T17:00:00+09:00`,
+      members: ["QA エンジニア"],
+      calendarName: "QA カレンダー",
+      calendarColor: "#84cc16",
+    },
+    {
+      id: `qa-bug-triage-${year}-${monthStr}`,
+      calendarId: "qa",
+      userId: "user-2",
+      title: "バグ分類会議",
+      memo: "バグの優先度決定",
+      location: "オンライン",
+      status: "info" as const,
+      start: `${year}-${monthStr}-16T13:30:00+09:00`,
+      end: `${year}-${monthStr}-16T14:30:00+09:00`,
+      members: ["QA リーダー", "開発"],
+      calendarName: "QA カレンダー",
+      calendarColor: "#84cc16",
+    },
+
+    // プロダクトカレンダー
+    {
+      id: `product-roadmap-${year}-${monthStr}`,
+      calendarId: "product",
+      userId: "user-1",
+      title: "プロダクトロードマップ",
+      memo: "次四半期の計画立案",
+      location: "第5会議室",
+      status: "success" as const,
+      start: `${year}-${monthStr}-07T10:00:00+09:00`,
+      end: `${year}-${monthStr}-07T12:00:00+09:00`,
+      members: ["PM", "開発", "デザイン"],
+      calendarName: "プロダクトカレンダー",
+      calendarColor: "#06b6d4",
+    },
+    {
+      id: `product-user-research-${year}-${monthStr}`,
+      calendarId: "product",
+      userId: "user-1",
+      title: "ユーザーリサーチ",
+      memo: "顧客ニーズ調査",
+      location: "オンライン",
+      status: "info" as const,
+      start: `${year}-${monthStr}-13T14:00:00+09:00`,
+      end: `${year}-${monthStr}-13T15:30:00+09:00`,
+      members: ["PM", "リサーチャー"],
+      calendarName: "プロダクトカレンダー",
+      calendarColor: "#06b6d4",
+    },
+
+    // インフラチーム
+    {
+      id: `infra-maintenance-${year}-${monthStr}`,
+      calendarId: "infra",
+      userId: "user-1",
+      title: "インフラ保守作業",
+      memo: "定期メンテナンス",
+      location: "オンライン",
+      status: "warning" as const,
+      start: `${year}-${monthStr}-20T01:00:00+09:00`,
+      end: `${year}-${monthStr}-20T03:00:00+09:00`,
+      members: ["インフラ班"],
+      calendarName: "インフラチーム",
+      calendarColor: "#14b8a6",
+    },
+    {
+      id: `infra-security-${year}-${monthStr}`,
+      calendarId: "infra",
+      userId: "user-1",
+      title: "セキュリティ対策",
+      memo: "脆弱性スキャン",
+      location: "オンライン",
+      status: "danger" as const,
+      start: `${year}-${monthStr}-27T10:00:00+09:00`,
+      end: `${year}-${monthStr}-27T12:00:00+09:00`,
+      members: ["セキュリティ", "インフラ"],
+      calendarName: "インフラチーム",
+      calendarColor: "#14b8a6",
+    },
+
+    // サポートカレンダー
+    {
+      id: `support-training-${year}-${monthStr}`,
+      calendarId: "support",
+      userId: "user-1",
+      title: "サポート研修",
+      memo: "新機能対応研修",
+      location: "サポート室",
+      status: "info" as const,
+      start: `${year}-${monthStr}-23T09:00:00+09:00`,
+      end: `${year}-${monthStr}-23T11:00:00+09:00`,
+      members: ["サポート全員"],
+      calendarName: "サポートカレンダー",
+      calendarColor: "#3b82f6",
+    },
+  ];
+}
+
+// 3ヶ月分のアイテムを生成
+function generateScheduleMockItems() {
+  const currentYear = 2025;
+  const currentMonth = 12;
+
+  const items = [];
+
+  // 前月、今月、来月の3ヶ月分を生成
+  for (let i = -1; i <= 1; i++) {
+    let month = currentMonth + i;
+    let year = currentYear;
+
+    if (month < 1) {
+      month += 12;
+      year -= 1;
+    } else if (month > 12) {
+      month -= 12;
+      year += 1;
+    }
+
+    items.push(...generateMonthlyItems(year, month));
+  }
+
+  return items;
+}
+
+const staticItems = [
+  // 複数日にまたがる予定のテスト（開発スプリント）
+  {
+    id: "dev-sprint-2025-12",
+    calendarId: "development",
+    userId: "user-1",
+    title: "スプリント2週間",
+    memo: "開発スプリント期間",
+    location: "オンライン",
+    status: "info" as const,
+    start: "2025-12-01T00:00:00+09:00",
+    end: "2025-12-14T23:59:59+09:00",
+    members: ["開発チーム"],
+    calendarName: "開発チームカレンダー",
+    calendarColor: "#22c55e",
+  },
+  // 年末年始休暇
+  {
+    id: "company-newyear-vacation",
+    calendarId: "company",
+    userId: "user-1",
+    title: "年末年始休暇",
+    memo: "全社休業",
+    status: "default" as const,
+    start: "2025-12-27T00:00:00+09:00",
+    end: "2026-01-06T23:59:59+09:00",
+    members: ["全社"],
+    calendarName: "全社カレンダー",
+    calendarColor: "#0ea5e9",
+  },
+  // デザインカンファレンス
+  {
+    id: "design-conference-2025",
+    calendarId: "design",
+    userId: "user-2",
+    title: "デザインカンファレンス",
+    memo: "海外出張",
+    location: "サンフランシスコ",
+    status: "warning" as const,
+    start: "2025-12-16T00:00:00+09:00",
+    end: "2025-12-20T23:59:59+09:00",
+    members: ["デザインチーム"],
+    calendarName: "デザインチームカレンダー",
+    calendarColor: "#f97316",
+  },
+];
+
+export const calendars = [
+  {
+    id: "company",
+    name: "全社カレンダー",
+    color: "#0ea5e9",
+    userId: "user-1",
+    imageUrl:
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "development",
+    name: "開発チームカレンダー",
+    color: "#22c55e",
+    userId: "user-1",
+    imageUrl:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "design",
+    name: "デザインチームカレンダー",
+    color: "#f97316",
+    userId: "user-2",
+  },
+  {
+    id: "sales",
+    name: "セールスカレンダー",
+    color: "#a855f7",
+    userId: "user-2",
+    imageUrl:
+      "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "hr",
+    name: "人事カレンダー",
+    color: "#ef4444",
+    userId: "user-3",
+    imageUrl:
+      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "pr",
+    name: "広報カレンダー",
+    color: "#10b981",
+    userId: "user-1",
+    imageUrl:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "marketing",
+    name: "マーケカレンダー",
+    color: "#f59e0b",
+    userId: "user-2",
+    imageUrl:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "support",
+    name: "サポートカレンダー",
+    color: "#3b82f6",
+    userId: "user-1",
+    imageUrl:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "backoffice",
+    name: "バックオフィス",
+    color: "#8b5cf6",
+    userId: "user-3",
+    imageUrl:
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "infra",
+    name: "インフラチーム",
+    color: "#14b8a6",
+    userId: "user-1",
+    imageUrl:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "qa",
+    name: "QA カレンダー",
+    color: "#84cc16",
+    userId: "user-2",
+    imageUrl:
+      "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    id: "product",
+    name: "プロダクトカレンダー",
+    color: "#06b6d4",
+    userId: "user-1",
+    imageUrl:
+      "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80",
+  },
+] as const;
+
+export const scheduleMock = {
+  calendars,
+  items: [...generateScheduleMockItems(), ...staticItems],
 } as const;
