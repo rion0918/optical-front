@@ -40,7 +40,7 @@ GitHub API から取得した PR 情報を props として受け取り、
 ### 使い方
 
 \`\`\`tsx
-import { PullRequestReviewOption } from "@/components/organisms/PullRequestReviewOption";
+import { PullRequestReviewOption } from "@/components/organisms/EngineerOption/PullRequestReviewOption";
 
 // GitHub API からデータを取得（呼び出し元の責務）
 const pullRequests = await fetchAssignedPRs();

@@ -9,8 +9,14 @@ import {
 } from "@/components/atoms/Dialog";
 import { MultiSelectDropdown } from "@/components/molecules/MultiSelectDropdown/MultiSelectDropdown";
 import { SearchInput } from "@/components/molecules/SearchInput/SearchInput";
-import { PullRequestReviewOption } from "@/components/organisms/PullRequestReviewOption";
-import type { PullRequestInfo } from "@/components/organisms/PullRequestReviewOption";
+import { PullRequestReviewOption } from "@/components/organisms/EngineerOption/PullRequestReviewOption";
+import { TeamReviewLoadOption } from "@/components/organisms/EngineerOption/TeamReviewLoadOption";
+import {
+  mockAllPrsUrl,
+  mockPullRequests,
+  mockTeamMembers,
+} from "@/mocks/data/github";
+import type { ChangeReviewerRequest } from "@/types/github";
 
 type LabeledOption = { label: string; value: string };
 
@@ -35,31 +41,6 @@ export function SearchHeader({
   const [calendar, setCalendar] = useState<string[]>(selectedCalendars ?? []); // カレンダーフィルターの選択値
   const [period, setPeriod] = useState<string[]>([]); // 期間フィルターの選択値
   const [isPreviewOpen, setIsPreviewOpen] = useState(false); // プレビュー表示用ダイアログの開閉状態
-
-  // 仮のPRデータ
-  const mockPullRequests: PullRequestInfo[] = [
-    {
-      id: 1,
-      title:
-        "fix: ログインバグの修正を行うことで素晴らしいユーザー体験を提供する",
-      url: "https://github.com/example/repo/pull/123",
-      author: "yamada",
-      isUrgent: true,
-    },
-    {
-      id: 2,
-      title: "feat: カレンダーAPI連携",
-      url: "https://github.com/example/repo/pull/125",
-      author: "tanaka",
-      isUrgent: false,
-    },
-    {
-      id: 3,
-      title: "docs: READMEの更新",
-      url: "https://github.com/example/repo/pull/127",
-      author: "suzuki",
-    },
-  ];
 
   useEffect(() => {
     setSearch(searchValue ?? "");
@@ -143,17 +124,32 @@ export function SearchHeader({
 
       {/* 選択内容プレビュー用ダイアログ */}
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-        <DialogContent className="w-[60vw] h-[80vh] max-w-8xl">
+        <DialogContent className="w-[80vw] h-[80vh] max-w-8xl overflow-auto">
           <DialogHeader>
             <DialogTitle>OptiCal</DialogTitle>
           </DialogHeader>
-          <div className="flex flex-wrap gap-4 p-4">
+          <div className="flex flex-row gap-6 p-4 w-full h-full">
             {/* PRレビュー待ち件数オプション */}
-            <PullRequestReviewOption
-              pullRequests={mockPullRequests}
-              allPrsUrl="https://github.com/pulls/review-requested"
-            />
-            {/* 他のオプションが追加される場合はここに配置 */}
+            <div className="flex-1 min-w-0 overflow-auto">
+              <h3 className="text-lg font-semibold mb-4">PR レビュー待ち</h3>
+              <PullRequestReviewOption
+                pullRequests={mockPullRequests}
+                allPrsUrl={mockAllPrsUrl}
+              />
+            </div>
+            {/* チームレビュー負荷オプション */}
+            <div className="flex-1 min-w-0 overflow-auto">
+              <h3 className="text-lg font-semibold mb-4">チームレビュー負荷</h3>
+              <TeamReviewLoadOption
+                members={mockTeamMembers}
+                onReviewerChange={(payload: ChangeReviewerRequest) =>
+                  console.log(
+                    "Reviewer change requested:",
+                    JSON.stringify(payload, null, 2),
+                  )
+                }
+              />
+            </div>
           </div>
         </DialogContent>
       </Dialog>
