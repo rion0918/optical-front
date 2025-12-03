@@ -120,3 +120,25 @@ export type GitHubReviewOptionsResponse = {
   /** 全 PR を見る GitHub URL */
   allPullRequestsUrl: string;
 };
+
+/**
+ * PullRequestReviewOption コンポーネントの Props
+ */
+export type PullRequestReviewOptionProps = {
+  /** レビュー待ちの PR 一覧 */
+  pullRequests: GitHubPullRequest[];
+  /** GitHub リポジトリの PR 一覧へのリンク（フッター用） */
+  allPrsUrl?: string;
+  /** カスタム className */
+  className?: string;
+};
+
+/**
+ * TeamReviewLoadOption コンポーネントの Props
+ */
+export type TeamReviewLoadOptionProps = {
+  /** チームメンバーのレビュー負荷一覧 */
+  members: TeamMemberReviewLoad[];
+  /** レビュアー変更時のコールバック */
+  onReviewerChange?: (payload: ChangeReviewerRequest) => void;
+};

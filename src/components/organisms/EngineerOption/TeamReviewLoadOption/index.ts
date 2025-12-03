@@ -5,6 +5,6 @@ export type {
   GitHubUser,
   ReviewLoadLevel,
   TeamMemberReviewLoad,
+  TeamReviewLoadOptionProps,
 } from "@/types/github";
-export type { TeamReviewLoadOptionProps } from "./TeamReviewLoadOption";
 export { TeamReviewLoadOption } from "./TeamReviewLoadOption";

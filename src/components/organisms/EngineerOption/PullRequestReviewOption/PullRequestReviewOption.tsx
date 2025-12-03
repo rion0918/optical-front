@@ -4,17 +4,11 @@ import { Bell, ExternalLink, Flame } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Badge } from "@/components/atoms/Badge";
-import type { GitHubPullRequest } from "@/types/github";
+import type {
+  GitHubPullRequest,
+  PullRequestReviewOptionProps,
+} from "@/types/github";
 import { cn } from "@/utils_constants_styles/utils";
-
-export type PullRequestReviewOptionProps = {
-  /** レビュー待ちの PR 一覧 */
-  pullRequests: GitHubPullRequest[];
-  /** GitHub リポジトリの PR 一覧へのリンク（フッター用） */
-  allPrsUrl?: string;
-  /** カスタム className */
-  className?: string;
-};
 
 /**
  * GitHub PR レビュー待ち件数を表示するオプションウィジェット

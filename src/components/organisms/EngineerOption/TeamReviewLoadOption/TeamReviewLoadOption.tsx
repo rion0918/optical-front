@@ -6,18 +6,8 @@ import {
   CardTitle,
 } from "@/components/atoms/Card";
 import { Separator } from "@/components/atoms/Separator";
-import type {
-  ChangeReviewerRequest,
-  TeamMemberReviewLoad,
-} from "@/types/github";
+import type { TeamReviewLoadOptionProps } from "@/types/github";
 import { MemberLoadItem } from "./MemberLoadItem";
-
-export interface TeamReviewLoadOptionProps {
-  /** チームメンバーのレビュー負荷一覧 */
-  members: TeamMemberReviewLoad[];
-  /** レビュアー変更時のコールバック */
-  onReviewerChange?: (payload: ChangeReviewerRequest) => void;
-}
 
 export function TeamReviewLoadOption({
   members,

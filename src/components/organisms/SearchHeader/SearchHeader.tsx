@@ -11,6 +11,7 @@ import { MultiSelectDropdown } from "@/components/molecules/MultiSelectDropdown/
 import { SearchInput } from "@/components/molecules/SearchInput/SearchInput";
 import { PullRequestReviewOption } from "@/components/organisms/EngineerOption/PullRequestReviewOption";
 import { TeamReviewLoadOption } from "@/components/organisms/EngineerOption/TeamReviewLoadOption";
+import { startMockServiceWorker } from "@/mocks/browser";
 import type {
   ChangeReviewerRequest,
   GitHubPullRequest,
@@ -52,6 +53,9 @@ export function SearchHeader({
   const fetchGitHubReviewOptions = useCallback(async () => {
     setIsLoading(true);
     try {
+      // MSW の初期化を待つ
+      await startMockServiceWorker();
+
       const response = await fetch("/api/github/review-options");
       if (!response.ok) {
         throw new Error("Failed to fetch GitHub review options");

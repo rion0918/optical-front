@@ -3,12 +3,12 @@ export type {
   ChangeReviewerRequest,
   GitHubPullRequest,
   GitHubUser,
+  PullRequestReviewOptionProps,
   ReviewLoadLevel,
   TeamMemberReviewLoad,
+  TeamReviewLoadOptionProps,
 } from "@/types/github";
 // PullRequestReviewOption
 export { PullRequestReviewOption } from "./PullRequestReviewOption";
-export type { PullRequestReviewOptionProps } from "./PullRequestReviewOption/PullRequestReviewOption";
 // TeamReviewLoadOption
 export { TeamReviewLoadOption } from "./TeamReviewLoadOption";
-export type { TeamReviewLoadOptionProps } from "./TeamReviewLoadOption/TeamReviewLoadOption";
