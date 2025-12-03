@@ -235,75 +235,128 @@ update files
 
 ## CI/CD
 
-### 自動チェック
+### GitHub Actions ワークフロー
 
 すべての PR で以下の自動チェックが実行されます：
 
-#### 1. Biome Lint & Format
+#### `.github/workflows/pr-checks.yml`
 
-```bash
-pnpm run lint
-```
+**トリガー:** PR 作成時（`main`, `develop`, `feat/**` ブランチ対象）
 
-- コードスタイルの統一性をチェック
-- フォーマットエラーを検出
+**実行ジョブ（並列実行）:**
 
-#### 2. Unit Tests
+1. **Biome Lint & Format**
 
-```bash
-pnpm test
-```
+   ```bash
+   pnpm run lint
+   ```
 
-- useSchedule.ts、useUser.ts などのテストを実行
+   - コードスタイルの統一性をチェック
+   - リント違反を検出
 
-#### 3. Next.js Build
+2. **TypeScript Type Check**
 
-```bash
-pnpm run build
-```
+   ```bash
+   pnpm tsc --noEmit
+   ```
 
-- ビルドエラーを事前検出
-- 型エラーを検出
+   - 型エラーを検出
+   - 型安全性を確保
 
-#### 4. Storybook Build
+3. **Next.js Build**
+   ```bash
+   pnpm run build
+   ```
+   - ビルドエラーを事前検出
+   - 本番環境で動作することを確認
 
-```bash
-pnpm run build-storybook
-```
+#### `.github/workflows/bundle-size.yml`
 
-- コンポーネントのビルド可能性を確認
-
-### ローカル Git フック（Husky）
-
-コミット時に自動実行：
-
-```bash
-# 事前条件
-git add .
-git commit -m "feat/issue123: 新機能を実装した"
-
-# 自動実行される内容
-✔ lint-staged が実行
-✔ biome format --write でファイルを自動整形
-✔ 修正後、修正内容でコミット
-```
-
-エラーがある場合はコミットが失敗し、修正が必要です。
-
-### GitHub Actions ワークフロー
-
-ファイル: `.github/workflows/pr-checks.yml`
-
-**トリガー:**
-
-- PR 作成時（全てのブランチ対象）
+**トリガー:** PR 作成時
 
 **実行内容:**
 
-- 4 つのジョブが **並列実行**
-- どのジョブが失敗したかが PR に表示される
+```bash
+ANALYZE=true pnpm run build
+```
 
-## トラブルシューティング
+- バンドルサイズを分析
+- 分析レポートを Artifact に保存（30 日間）
+- ビルド警告を検出
+
+#### `.github/workflows/discord-notify.yml`
+
+**トリガー:** Issue/PR イベント
+
+**機能:**
+
+- Issue アサイン時に Slack メンション
+- PR レビュー依頼時に通知
+- PR マージ時に通知
+- PR レビュー到着時に通知
+
+### ローカル Git フック（Husky）
+
+コミット前に自動実行：
+
+#### `pre-commit`
+
+```bash
+pnpm exec lint-staged
+pnpm run build
+```
+
+**実行内容:**
+
+1. **Lint-Staged**
+
+   - ステージングファイルに対して以下を実行：
+     - `biome lint --fix` - リント違反を自動修正
+     - `biome format --write` - コードをフォーマット＆import ソート
+
+2. **Build Check**
+   - `pnpm run build` で本番ビルドが成功することを確認
+   - ビルドエラーがあればコミット失敗
+
+#### `commit-msg`
+
+```bash
+pnpm exec commitlint --edit "$1"
+```
+
+**実行内容:**
+
+- コミットメッセージが Conventional Commits に従っているか検証
+- 例: `feat/issue123: 新機能を実装した`
+
+### チェック構成図
+
+```
+ローカル開発
+   ↓
+git add .
+   ↓
+git commit (Husky が自動実行)
+   ├─ lint-staged
+   │  ├─ biome lint --fix (TS/JSファイル)
+   │  └─ biome format --write
+   ├─ build (ビルド確認)
+   └─ commit-msg (コミットメッセージ検証)
+   ↓
+コミット成功
+   ↓
+PR 作成
+   ↓
+GitHub Actions (並列実行)
+   ├─ Biome Lint
+   ├─ TypeScript Type Check
+   ├─ Next.js Build
+   └─ Bundle Size Analysis
+   ↓
+すべて成功 → マージ可能
+```
+
+### トラブルシューティング
 
 ### Husky が動作しない
 
