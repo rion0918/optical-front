@@ -1,40 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { getTodaySchedule } from "@/api/schedule";
 import type { StatusDotVariant } from "@/components/atoms/StatusDot";
 import type { TodaySchedulePanelItem } from "@/components/organisms/TodaySchedulePanel";
-import { getToken } from "@/lib/auth";
 import { startMockServiceWorker } from "@/mocks/browser";
-
-export type ScheduleCalendar = {
-  id: string;
-  name: string;
-  color: string;
-  description?: string;
-  imageUrl?: string;
-};
-
-export type ScheduleItem = {
-  id: string;
-  title: string;
-  memo?: string;
-  location?: string;
-  locationUrl?: string;
-  members?: string[];
-  calendarId?: string;
-  calendarName?: string;
-  status: "default" | "info" | "success" | "warning" | "danger";
-  start: string;
-  end?: string;
-  calendarColor?: string;
-};
-
-export type ScheduleApiResponse = {
-  // API によっては日付の返却が無いケースも想定し optional にする
-  date?: string;
-  items: ScheduleItem[];
-  calendars?: ScheduleCalendar[];
-};
+import type {
+  ScheduleApiResponse,
+  ScheduleCalendar,
+  ScheduleItem,
+} from "@/types/schedule";
 
 export function useSchedule() {
   const [data, setData] = useState<ScheduleApiResponse | null>(null);
@@ -56,22 +31,7 @@ export function useSchedule() {
       setIsLoading(true);
       setError(null);
       try {
-        // 認証トークンを取得
-        const token = getToken();
-        if (!token) {
-          throw new Error("認証トークンがありません");
-        }
-
-        const response = await fetch("/api/today-schedule", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`Failed to fetch: ${response.status}`);
-        }
-        const json = (await response.json()) as ScheduleApiResponse;
+        const json = await getTodaySchedule();
         if (isMounted) {
           const normalized = normalizeScheduleResponse(json);
           setData(normalized);

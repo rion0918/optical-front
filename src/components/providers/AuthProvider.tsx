@@ -14,14 +14,16 @@ import {
   useState,
 } from "react";
 import { toast } from "sonner";
-import { ApiClientError, apiGet, apiPost } from "@/lib/api-client";
+import {
+  AUTH_GOOGLE_LOGIN_URL,
+  fetchCurrentUser,
+  login as requestLogin,
+  logout as requestLogout,
+  signup as requestSignup,
+} from "@/api/auth";
+import { ApiClientError } from "@/lib/api-client";
 import { isAuthenticated, removeToken, saveToken } from "@/lib/auth";
-import type {
-  AuthResponse,
-  LoginRequest,
-  SignupRequest,
-  User,
-} from "@/types/auth";
+import type { LoginRequest, SignupRequest, User } from "@/types/auth";
 
 /**
  * 認証コンテキストの型
@@ -73,7 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
    */
   const fetchUser = useCallback(async (): Promise<User | null> => {
     try {
-      const userData = await apiGet<User>("/api/auth/me");
+      const userData = await fetchCurrentUser();
       return userData;
     } catch (err) {
       if (err instanceof ApiClientError && err.code === 401) {
@@ -117,11 +119,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setError(null);
 
       try {
-        const response = await apiPost<AuthResponse>(
-          "/api/auth/login",
-          credentials,
-          { useAuth: false },
-        );
+        const response = await requestLogin(credentials);
 
         // トークンとユーザー情報を保存
         saveToken(response.token);
@@ -151,9 +149,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setError(null);
 
       try {
-        const response = await apiPost<AuthResponse>("/api/auth/signup", data, {
-          useAuth: false,
-        });
+        const response = await requestSignup(data);
 
         // トークンとユーザー情報を保存
         saveToken(response.token);
@@ -179,7 +175,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
    */
   const loginWithGoogle = useCallback(() => {
     // Google OAuth エンドポイントにリダイレクト
-    window.location.href = "/api/auth/google";
+    window.location.href = AUTH_GOOGLE_LOGIN_URL;
   }, []);
 
   /**
@@ -191,7 +187,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     try {
       // サーバー側のログアウト処理(オプション)
-      await apiPost("/api/auth/logout");
+      await requestLogout();
     } catch (err) {
       // ログアウトエラーは無視（トークンは削除する）
       console.warn("[AuthProvider] Logout API error (ignored):", {

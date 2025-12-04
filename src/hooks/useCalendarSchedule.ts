@@ -1,34 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { getCalendarDetail } from "@/api/calendars";
+import { getTodaySchedule } from "@/api/schedule";
 import type { StatusDotVariant } from "@/components/atoms/StatusDot";
 import type { TodaySchedulePanelItem } from "@/components/organisms/TodaySchedulePanel";
-import { getToken } from "@/lib/auth";
 import { startMockServiceWorker } from "@/mocks/browser";
-
-export type CalendarDetail = {
-  id: string;
-  name: string;
-  color: string;
-  description?: string;
-  imageUrl?: string;
-  customOptions?: string[];
-};
-
-export type ScheduleItem = {
-  id: string;
-  title: string;
-  memo?: string;
-  location?: string;
-  locationUrl?: string;
-  members?: string[];
-  calendarId?: string;
-  calendarName?: string;
-  status: "default" | "info" | "success" | "warning" | "danger";
-  start: string;
-  end?: string;
-  calendarColor?: string;
-};
+import type { CalendarDetail, ScheduleItem } from "@/types/schedule";
 
 /**
  * 単体カレンダーのスケジュールとオプションを取得するフック
@@ -56,11 +34,7 @@ export function useCalendarSchedule(calendarId: string) {
       }
 
       try {
-        const response = await fetch(`/api/calendars/${calendarId}`);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch calendar: ${response.status}`);
-        }
-        const json = await response.json();
+        const json = await getCalendarDetail(calendarId);
         if (isMounted) {
           setCalendar(json.calendar);
         }
@@ -93,23 +67,7 @@ export function useCalendarSchedule(calendarId: string) {
       setError(null);
 
       try {
-        const token = getToken();
-        if (!token) {
-          throw new Error("認証トークンがありません");
-        }
-
-        const response = await fetch("/api/today-schedule", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch: ${response.status}`);
-        }
-
-        const json = await response.json();
+        const json = await getTodaySchedule();
 
         if (isMounted) {
           // このカレンダーのスケジュールのみをフィルタリング
