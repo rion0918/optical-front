@@ -55,7 +55,18 @@ export function startMockServiceWorker() {
 
     console.log("[MSW] Starting worker...");
     await worker?.start({
-      onUnhandledRequest: "warn",
+      onUnhandledRequest(request, print) {
+        // Next.js 内部リクエストは無視
+        const url = new URL(request.url);
+        if (
+          url.pathname.startsWith("/_next/") ||
+          url.pathname.startsWith("/__nextjs")
+        ) {
+          return;
+        }
+        // その他の未処理リクエストは警告を出す
+        print.warning();
+      },
       serviceWorker: {
         url: "/mockServiceWorker.js",
       },

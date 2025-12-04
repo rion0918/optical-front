@@ -4,10 +4,7 @@ import { Bell, ExternalLink, Flame } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Badge } from "@/components/atoms/Badge";
-import type {
-  GitHubPullRequest,
-  PullRequestReviewOptionProps,
-} from "@/types/github";
+import type { PullRequestReviewOptionProps } from "@/types/github";
 import { cn } from "@/utils_constants_styles/utils";
 
 /**

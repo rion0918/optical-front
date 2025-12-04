@@ -120,10 +120,11 @@ export const scheduleHandlers = [
 
       // リクエストボディを取得
       const body = await request.json();
-      const { name, color, imageFileName } = body as {
+      const { name, color, imageFileName, customOptions } = body as {
         name: string;
         color: string;
         imageFileName?: string | null;
+        customOptions?: string[];
       };
 
       // 新しいカレンダーを作成
@@ -132,6 +133,7 @@ export const scheduleHandlers = [
         name,
         color,
         userId,
+        customOptions: customOptions ?? [],
         ...(imageFileName && {
           imageUrl: `https://images.unsplash.com/photo-${Math.random().toString(36).slice(2)}?auto=format&fit=crop&w=1200&q=80`,
         }),
@@ -159,5 +161,31 @@ export const scheduleHandlers = [
         { status: 401 },
       );
     }
+  }),
+
+  // GET /api/calendars/:id - カレンダー詳細取得
+  http.get("/api/calendars/:id", ({ params }) => {
+    const { id } = params;
+    const calendar = scheduleMock.calendars.find((c) => c.id === id);
+
+    if (!calendar) {
+      return HttpResponse.json(
+        {
+          error: {
+            code: 404,
+            message: "カレンダーが見つかりません",
+          },
+        },
+        { status: 404 },
+      );
+    }
+
+    return HttpResponse.json({
+      calendar: {
+        ...calendar,
+        customOptions:
+          (calendar as { customOptions?: string[] }).customOptions ?? [],
+      },
+    });
   }),
 ];
