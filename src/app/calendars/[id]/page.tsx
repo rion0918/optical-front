@@ -3,6 +3,7 @@
 import { ArrowLeft, CalendarDays } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { getGitHubReviewOptions } from "@/api/github";
 import { Button } from "@/components/atoms/Button";
 import { Card, CardContent } from "@/components/atoms/Card";
 import {
@@ -80,11 +81,7 @@ function CalendarDetailContent() {
     setIsGitHubLoading(true);
     try {
       await startMockServiceWorker();
-      const response = await fetch("/api/github/review-options");
-      if (!response.ok) {
-        throw new Error("Failed to fetch GitHub review options");
-      }
-      const data: GitHubReviewOptionsResponse = await response.json();
+      const data: GitHubReviewOptionsResponse = await getGitHubReviewOptions();
       setPullRequests(data.myPendingReviews);
       setTeamMembers(data.teamReviewLoads);
       setAllPrsUrl(data.allPullRequestsUrl);

@@ -23,8 +23,10 @@ import {
 import { CalendarWizardStepIndicator } from "@/components/molecules/CalendarWizardStepIndicator";
 import { CalendarWizardSummary } from "@/components/molecules/CalendarWizardSummary";
 import { ConfirmModal } from "@/components/molecules/ConfirmModal";
-import { ApiClientError, apiPost } from "@/lib/api-client";
+import { createCalendar } from "@/api/calendars";
+import { ApiClientError } from "@/lib/api-client";
 import { startMockServiceWorker } from "@/mocks/browser";
+import type { CreateCalendarRequest } from "@/types/schedule";
 
 type StepKey = 0 | 1 | 2;
 
@@ -407,7 +409,7 @@ export function CalendarCreationWizard() {
         console.log("[CalendarCreationWizard] MSW started");
       }
 
-      const payload = {
+      const payload: CreateCalendarRequest = {
         name: state.name.trim(),
         color: state.color,
         members: state.useSolo
@@ -426,7 +428,7 @@ export function CalendarCreationWizard() {
         "[CalendarCreationWizard] Calling POST /api/calendars",
         payload,
       );
-      await apiPost("/api/calendars", payload);
+      await createCalendar(payload);
       setIsSubmitting(false);
       setIsComplete(true);
       toast.success("カレンダーを作成しました");
