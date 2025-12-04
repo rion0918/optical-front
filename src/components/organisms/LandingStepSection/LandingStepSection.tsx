@@ -53,7 +53,7 @@ export const LandingStepSection = () => {
           {/* 16:9のアスペクト比を維持 */}
           <iframe
             className="w-full aspect-video rounded-lg shadow-xl"
-            src="" //動画URLをここに挿入
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ" //動画URLをここに挿入
             title="サービス紹介デモ" // 動画の内容に合わせて変更してください
             allow="accelerometer; autoplay; clipboard-write; 
                                     encrypted-media; gyroscope; picture-in-picture"
