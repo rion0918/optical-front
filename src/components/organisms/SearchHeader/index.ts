@@ -1,2 +1,2 @@
-export * from "./SearchHeader";
+export * from "./GeneralSearchHeader";
 export * from "./SingleSearchHeader";

@@ -118,7 +118,7 @@ function CalendarDetailContent() {
 
   const handleBack = () => {
     setIsNavigating(true);
-    // 2秒待ってからナビゲーション
+    // 0.4秒待ってからナビゲーション
     setTimeout(() => {
       router.push("/");
     }, 400);

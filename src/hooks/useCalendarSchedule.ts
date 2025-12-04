@@ -57,12 +57,10 @@ export function useCalendarSchedule(calendarId: string) {
 
       try {
         const response = await fetch(`/api/calendars/${calendarId}`);
-        console.log("[useCalendarSchedule] Fetching calendar:", calendarId);
         if (!response.ok) {
           throw new Error(`Failed to fetch calendar: ${response.status}`);
         }
         const json = await response.json();
-        console.log("[useCalendarSchedule] Calendar response:", json);
         if (isMounted) {
           setCalendar(json.calendar);
         }
@@ -232,7 +230,7 @@ function normalizeStatus(value: ScheduleItem["status"]): StatusDotVariant {
     "success",
     "warning",
     "danger",
-  ] satisfies StatusDotVariant[]);
+  ] as const satisfies readonly StatusDotVariant[]);
 
   return statuses.has(value as StatusDotVariant) ? value : "default";
 }

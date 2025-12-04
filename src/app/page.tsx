@@ -13,7 +13,7 @@ import {
   type GeneralScheduleBoardItem,
   ScheduleEventDialog,
 } from "@/components/organisms/GeneralScheduleBoard";
-import { GeneralSearchHeader } from "@/components/organisms/SearchHeader/SearchHeader";
+import { GeneralSearchHeader } from "@/components/organisms/SearchHeader/GeneralSearchHeader";
 import { SelectCalendarStrip } from "@/components/organisms/SelectCalendarStrip";
 import { TodaySchedulePanel } from "@/components/organisms/TodaySchedulePanel";
 import { useAuth } from "@/hooks/useAuth";
@@ -219,7 +219,7 @@ function HomeContent() {
         calendars={calendars}
         onSelectCalendar={(cal) => {
           setIsNavigating(true);
-          // 2秒待ってからナビゲーション
+          // 0.5秒待ってからナビゲーション
           setTimeout(() => {
             router.push(`/calendars/${cal.id}`);
           }, 500);
