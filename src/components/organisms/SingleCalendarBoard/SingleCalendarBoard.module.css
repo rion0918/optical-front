@@ -1,0 +1,17 @@
+.eventsScroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255 255 255 / 0.2) transparent;
+}
+
+.eventsScroll::-webkit-scrollbar {
+  width: 3px;
+}
+
+.eventsScroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.eventsScroll::-webkit-scrollbar-thumb {
+  background-color: rgba(255 255 255 / 0.2);
+  border-radius: 9999px;
+}

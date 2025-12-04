@@ -4,6 +4,7 @@ import { CalendarDays } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/atoms/Card";
+import { Loading } from "@/components/atoms/Loading";
 import { CalendarBoardHeader } from "@/components/molecules/CalendarBoardHeader";
 import { ConfirmModal } from "@/components/molecules/ConfirmModal/ConfirmModal";
 import { AccountMenu } from "@/components/organisms/AccountMenu/AccountMenu";
@@ -12,7 +13,7 @@ import {
   type GeneralScheduleBoardItem,
   ScheduleEventDialog,
 } from "@/components/organisms/GeneralScheduleBoard";
-import { SearchHeader } from "@/components/organisms/SearchHeader/SearchHeader";
+import { GeneralSearchHeader } from "@/components/organisms/SearchHeader/GeneralSearchHeader";
 import { SelectCalendarStrip } from "@/components/organisms/SelectCalendarStrip";
 import { TodaySchedulePanel } from "@/components/organisms/TodaySchedulePanel";
 import { useAuth } from "@/hooks/useAuth";
@@ -52,6 +53,7 @@ function HomeContent() {
   const [viewDate, setViewDate] = useState(() => startOfDay(new Date()));
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCalendars, setSelectedCalendars] = useState<string[]>([]);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const filteredItems = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
@@ -172,7 +174,7 @@ function HomeContent() {
     <div className="flex h-screen flex-col overflow-hidden bg-muted/10">
       <header className="border-b border-border bg-card/80 backdrop-blur">
         <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-2.5 px-4 py-2.5 lg:px-8">
-          <SearchHeader
+          <GeneralSearchHeader
             searchValue={searchTerm}
             onSearchChange={(value) => setSearchTerm(value)}
             calendarOptions={calendarOptions}
@@ -216,14 +218,25 @@ function HomeContent() {
       <SelectCalendarStrip
         calendars={calendars}
         onSelectCalendar={(cal) => {
-          console.log(`[navigate] 単体カレンダーページへ遷移: ${cal.name}`);
-          //ここに将来的に単体スケジュールページに遷移するロジックを実装する
-          //router.push(`/calendars/${cal.id}`);
+          setIsNavigating(true);
+          // 0.5秒待ってからナビゲーション
+          setTimeout(() => {
+            router.push(`/calendars/${cal.id}`);
+          }, 500);
         }}
         onAddCalendar={() => {
           router.push("/calendars/new");
         }}
       />
+
+      {/* 遷移時のローディングオーバーレイ */}
+      {isNavigating && (
+        <Loading
+          variant="overlay"
+          size="lg"
+          message="カレンダーを読み込み中..."
+        />
+      )}
 
       {/* メールアドレス変更確認モーダル */}
       <ConfirmModal

@@ -75,6 +75,28 @@ const CUSTOM_OPTIONS: CalendarWizardCustomOption[] = [
   },
 ];
 
+const CUSTOM_OPTIONS_WITH_GITHUB: CalendarWizardCustomOption[] = [
+  ...CUSTOM_OPTIONS,
+  {
+    id: "webhook",
+    label: "Webhook連携",
+    description:
+      "他サービスとの自動連携用にカスタムWebhookを設定できるようにします。",
+  },
+  {
+    id: "pull_request_review_wait_count",
+    label: "PRレビュー待ち件数",
+    description:
+      "GitHub連携により、あなたがレビュー待ちのPull Request件数をプレビューに表示します。",
+  },
+  {
+    id: "team_review_load",
+    label: "チームレビュー負荷",
+    description:
+      "GitHub連携により、チームメンバーのレビュー負荷状況をプレビューに表示します。",
+  },
+];
+
 export const Playground: Story = {
   render: () => {
     const [selectedTemplateId, setSelectedTemplateId] = useState(
@@ -94,6 +116,48 @@ export const Playground: Story = {
         selectedTemplateId={selectedTemplateId}
         onSelectTemplate={setSelectedTemplateId}
         customOptions={CUSTOM_OPTIONS}
+        selectedCustomOptions={selectedCustomOptions}
+        onToggleCustomOption={(optionId) =>
+          setSelectedCustomOptions((prev) => ({
+            ...prev,
+            [optionId]: !prev[optionId],
+          }))
+        }
+      />
+    );
+  },
+};
+
+/**
+ * GitHub オプションを含むカスタムオプション一覧
+ *
+ * `pull_request_review_wait_count` と `team_review_load` の 2 つの
+ * GitHub 連携オプションが追加された状態を確認できます。
+ * これらを選択すると、SearchHeader のプレビューダイアログで
+ * 対応するウィジェットが表示されます。
+ */
+export const WithGitHubOptions: Story = {
+  render: () => {
+    const [selectedTemplateId, setSelectedTemplateId] = useState(
+      TEMPLATES[1].id, // Dev テンプレートを選択
+    );
+    const [selectedCustomOptions, setSelectedCustomOptions] = useState<
+      Record<string, boolean>
+    >({
+      reminder_digest: true,
+      task_inbox: false,
+      weekly_report: false,
+      webhook: true,
+      pull_request_review_wait_count: true,
+      team_review_load: true,
+    });
+
+    return (
+      <CalendarWizardOptionsForm
+        templates={TEMPLATES}
+        selectedTemplateId={selectedTemplateId}
+        onSelectTemplate={setSelectedTemplateId}
+        customOptions={CUSTOM_OPTIONS_WITH_GITHUB}
         selectedCustomOptions={selectedCustomOptions}
         onToggleCustomOption={(optionId) =>
           setSelectedCustomOptions((prev) => ({

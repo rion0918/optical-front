@@ -131,6 +131,18 @@ const CUSTOM_OPTIONS_WITH_DEFAULT: Array<
     description:
       "他サービスとの自動連携用にカスタムWebhookを設定できるようにします。",
   },
+  {
+    id: "pull_request_review_wait_count",
+    label: "PRレビュー待ち件数",
+    description:
+      "GitHub連携により、あなたがレビュー待ちのPull Request件数をプレビューに表示します。",
+  },
+  {
+    id: "team_review_load",
+    label: "チームレビュー負荷",
+    description:
+      "GitHub連携により、チームメンバーのレビュー負荷状況をプレビューに表示します。",
+  },
 ];
 
 const CUSTOM_OPTION_ITEMS: CalendarWizardCustomOption[] =

@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { GoogleLoginButton } from "@/components/atoms/GoogleLoginButton";
+import { Loading } from "@/components/atoms/Loading";
 import { LoginForm } from "@/components/molecules/LoginForm";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -28,35 +29,7 @@ export default function LoginPage() {
 
   // ローディング中
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="text-center">
-          <svg
-            className="animate-spin h-12 w-12 mx-auto mb-4 text-blue-600"
-            viewBox="0 0 24 24"
-            role="status"
-            aria-label="読み込み中"
-          >
-            <title>Loading</title>
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-              fill="none"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-            />
-          </svg>
-          <p className="text-gray-600">読み込み中...</p>
-        </div>
-      </div>
-    );
+    return <Loading variant="fullscreen" size="lg" message="読み込み中..." />;
   }
 
   // 未認証の場合のみログインフォームを表示
