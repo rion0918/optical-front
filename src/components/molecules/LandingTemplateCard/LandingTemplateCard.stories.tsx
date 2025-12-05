@@ -1,7 +1,7 @@
 // src/components/molecules/LandingTemplateCard/LandingTemplateCard.stories.tsx
 
-import { fn } from "@storybook/test";
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 import { templateData } from "../../organisms/LandingTemplateSection/TemplateData";
 import { LandingTemplateCard } from "./LandingTemplateCard";
 
