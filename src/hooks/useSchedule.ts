@@ -5,11 +5,7 @@ import { getTodaySchedule } from "@/api/schedule";
 import type { StatusDotVariant } from "@/components/atoms/StatusDot";
 import type { TodaySchedulePanelItem } from "@/components/organisms/TodaySchedulePanel";
 import { startMockServiceWorker } from "@/mocks/browser";
-import type {
-  ScheduleApiResponse,
-  ScheduleCalendar,
-  ScheduleItem,
-} from "@/types/schedule";
+import type { ScheduleApiResponse, ScheduleItem } from "@/types/schedule";
 
 export function useSchedule() {
   const [data, setData] = useState<ScheduleApiResponse | null>(null);
