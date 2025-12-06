@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
+    "typecheck": "tsc --noEmit",
     "lint:fix": "biome check --fix",
     "format": "biome format --write",
     "storybook": "storybook dev -p 6006",

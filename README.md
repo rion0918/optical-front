@@ -218,13 +218,11 @@ update files
 ### ブランチルール(現在は無視、将来的に適応したい)
 
 1. `main` ブランチ
-
    - 本番リリース版
    - 直接コミット禁止
    - PR レビュー必須
 
 2. `develop` ブランチ
-
    - 開発版
    - 全機能は `develop` ベース
    - PR レビュー必須
@@ -267,6 +265,7 @@ update files
    ```bash
    pnpm run build
    ```
+
    - ビルドエラーを事前検出
    - 本番環境で動作することを確認
 
@@ -297,26 +296,34 @@ ANALYZE=true pnpm run build
 
 ### ローカル Git フック（Husky）
 
-コミット前に自動実行：
+コミット前と push 前に自動実行：
 
 #### `pre-commit`
 
 ```bash
 pnpm exec lint-staged
-pnpm run build
 ```
 
 **実行内容:**
 
 1. **Lint-Staged**
-
    - ステージングファイルに対して以下を実行：
      - `biome lint --fix` - リント違反を自動修正
      - `biome format --write` - コードをフォーマット＆import ソート
 
-2. **Build Check**
-   - `pnpm run build` で本番ビルドが成功することを確認
-   - ビルドエラーがあればコミット失敗
+#### `pre-push`
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm pages:build
+```
+
+**実行内容:**
+
+1. `pnpm lint` - Biome による静的チェック
+2. `pnpm typecheck` - TypeScript 型チェック
+3. `pnpm pages:build` - Cloudflare Pages と同等の本番ビルドを事前検証
 
 #### `commit-msg`
 
