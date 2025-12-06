@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getTodaySchedule } from "@/lib/api-schedule";
 import type { StatusDotVariant } from "@/components/atoms/StatusDot";
 import type { TodaySchedulePanelItem } from "@/components/organisms/TodaySchedulePanel";
+import { getTodaySchedule } from "@/lib/api-schedule";
 import type { ScheduleApiResponse, ScheduleItem } from "@/types/schedule";
 
 export function useSchedule() {

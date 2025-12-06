@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getCalendarDetail } from "@/lib/api-calendars";
-import { getTodaySchedule } from "@/lib/api-schedule";
 import type { StatusDotVariant } from "@/components/atoms/StatusDot";
 import type { TodaySchedulePanelItem } from "@/components/organisms/TodaySchedulePanel";
+import { getCalendarDetail } from "@/lib/api-calendars";
+import { getTodaySchedule } from "@/lib/api-schedule";
 import type { CalendarDetail, ScheduleItem } from "@/types/schedule";
 
 /**

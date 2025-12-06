@@ -2,8 +2,7 @@
 
 import { ArrowLeft, CalendarDays } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import { getGitHubReviewOptions } from "@/lib/api-github";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { Card, CardContent } from "@/components/atoms/Card";
 import {
@@ -27,6 +26,7 @@ import {
 } from "@/components/organisms/SingleCalendarBoard";
 import { useAuth } from "@/hooks/useAuth";
 import { useCalendarSchedule } from "@/hooks/useCalendarSchedule";
+import { getGitHubReviewOptions } from "@/lib/api-github";
 import type {
   ChangeReviewerRequest,
   GitHubPullRequest,
