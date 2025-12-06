@@ -1,5 +1,7 @@
 "use client";
 
+export const runtime = "edge";
+
 import { ArrowLeft, CalendarDays } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
