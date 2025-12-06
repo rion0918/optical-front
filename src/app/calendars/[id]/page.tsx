@@ -5,7 +5,7 @@ export const runtime = "edge";
 import { ArrowLeft, CalendarDays } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import { getGitHubReviewOptions } from "@/api/github";
+import { getGitHubReviewOptions } from "@/lib/api-github";
 import { Button } from "@/components/atoms/Button";
 import { Card, CardContent } from "@/components/atoms/Card";
 import {
